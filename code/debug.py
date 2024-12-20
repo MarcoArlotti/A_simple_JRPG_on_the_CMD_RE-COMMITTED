@@ -1,9 +1,8 @@
 import py_cui
 from art import text2art
-import inizio_run
-import combattimento
+from termcolor import colored
 py_cui.WHITE_ON_RED
-root = py_cui.PyCUI(7, 9)
+root = py_cui.PyCUI(7, 8)
 
 #primo valore determina quanto spazio verso il basso
 #secondo valore determina quanto spazio verso destra
@@ -11,10 +10,17 @@ root = py_cui.PyCUI(7, 9)
 #quarto valore quanto largo il widget
 #?????
 #?????
-inizio_run.inizio_run()
-Art = text2art("KEKW",font="sub-zero")
-#root.add_block_label("test fraidoo", 0,0,3,3,1,0)
-root.add_button("test fraido",0,3,1,1,3,3)
+def attacca():
+    pass
+#Art = text2art("osuba",font="sub-zero")
+#root.add_block_label(Art,row=0,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,center= False)
+#
+menu_item_list = ["Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf",]
 
+menu = root.add_scroll_menu("fabio", row=4, column=4, row_span = 1, column_span = 1, padx = 1, pady = 0)
+menu.add_item_list(menu_item_list)
+menu.add_mouse_command()
+#root.add_button("attacca",row=4,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,command=attacca())
+#root.add_block_label(Art2,row=0,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,center= False)
 #root.text_block.add_text_color_rule('+', py_cui.GREEN_ON_BLACK, 'startswith')
 root.start()
