@@ -4,6 +4,7 @@ Entita --|> Alleato
 Entita --|> Nemico
 Entita --> Set_magie :possiede
 Set_magie --> Magia :possiede
+
 class Entita {
     nome: str
     colore: str
@@ -12,12 +13,12 @@ class Entita {
     agilita :int
     atterrato :bool
     one_more :bool
-    crit :boll
     possibilita_crit :int
     potenza_magie :int
     difesa :int
     set_magie :list
-    statistiche_momentanee :tuple 
+    statistiche_momentanee :tuple
+
 }
 
 class Alleato {
@@ -34,6 +35,8 @@ class Set_magie {
     lista_magie :list
     debolezze :list
     annulla :list
+    -aggiungi_magia(magia)
+    -rimuovi_magia(magia)
 }
 
 class Magia {
