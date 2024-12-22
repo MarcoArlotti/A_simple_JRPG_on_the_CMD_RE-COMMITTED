@@ -11,7 +11,7 @@ class Entita {
     vita_massima :int
     AGILITA :int
     POSSIBILITA_CRIT :int
-    POTENZA_MAGIE :int
+    potenza_magie :int
     DIFESA :int
     lista_set :list
     -cambia_set(set_da_verificare)
@@ -21,6 +21,7 @@ class Alleato {
     sp_massimi :int
     sp :int
     esperienza :float
+    -aumenta_statistiche_se_livellato()
 }
 
 class Nemico{
