@@ -1,26 +1,22 @@
-import py_cui
-from art import text2art
-from termcolor import colored
-py_cui.WHITE_ON_RED
-root = py_cui.PyCUI(7, 8)
+#import py_cui
+from library.funzioni_jrpg import Entita, Alleato, Nemico, lista_set, Magia
 
-#primo valore determina quanto spazio verso il basso
-#secondo valore determina quanto spazio verso destra
-#terzo valore determina di quanto fare alta la grandezza del widget
-#quarto valore quanto largo il widget
-#?????
-#?????
-def attacca():
-    pass
-#Art = text2art("osuba",font="sub-zero")
-#root.add_block_label(Art,row=0,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,center= False)
-#
-menu_item_list = ["Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf","Item1", "Item2", "dsadasdf",]
 
-menu = root.add_scroll_menu("fabio", row=4, column=4, row_span = 1, column_span = 1, padx = 1, pady = 0)
-menu.add_item_list(menu_item_list)
-menu.add_mouse_command()
-#root.add_button("attacca",row=4,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,command=attacca())
-#root.add_block_label(Art2,row=0,column=0,row_span=2,column_span= 2,padx= 0,pady= 0,center= False)
-#root.text_block.add_text_color_rule('+', py_cui.GREEN_ON_BLACK, 'startswith')
-root.start()
+
+
+#magia
+test_magia1 = Magia("bomba",2,"esplosivo",True,True,10) #TODO
+test_magia2 = Magia("bomba",3,"esplosivo",True,True,14) #TODO
+
+test_lista_magie = [test_magia1,test_magia2]
+
+test_debolezze = ["acqua"]
+test_cosa_annulla = []
+
+#set_magia
+test_set_magia1 = Set_magia(test_lista_magie,test_debolezze,test_cosa_annulla) #TODO
+test_set_magia2 = Set_magia(test_lista_magie,test_debolezze,test_cosa_annulla) #TODO
+#lista_set
+test_lista_set = [test_set_magia1,test_set_magia2]
+
+test_entita = Entita("osuba","giallo",200,20,10,10,20,test_lista_set)

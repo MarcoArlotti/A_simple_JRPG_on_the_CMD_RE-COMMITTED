@@ -2,23 +2,19 @@
 classDiagram
 Entita --|> Alleato
 Entita --|> Nemico
-Entita --> Set_magie :possiede
-Set_magie --> Magia :possiede
+Entita --> set_magia :possiede
+set_magia --> Magia :possiede
 
 class Entita {
-    nome: str
-    colore: str
-    vita_massima : int
-    vita :int
-    agilita :int
-    atterrato :bool
-    one_more :bool
-    possibilita_crit :int
-    potenza_magie :int
-    difesa :int
-    set_magie :list
-    statistiche_momentanee :tuple
-
+    nome :str
+    colore :str
+    vita_massima :int
+    AGILITA :int
+    POSSIBILITA_CRIT :int
+    POTENZA_MAGIE :int
+    DIFESA :int
+    lista_set :list
+    -cambia_set(set_da_verificare)
 }
 
 class Alleato {
@@ -31,10 +27,10 @@ class Nemico{
     drop
 }
 
-class Set_magie {
+class set_magia {
     lista_magie :list
     debolezze :list
-    annulla :list
+    cosa_annulla :list
     -aggiungi_magia(magia)
     -rimuovi_magia(magia)
 }
