@@ -3,8 +3,8 @@ import os
 class Entita:
     def __init__(
                 self,
-                nome:str,
-                colore:str,
+                NOME:str,
+                COLORE:str,
                 vita_massima:int,
                 AGILITA:int,
                 POSSIBILITA_CRIT:int,
@@ -12,8 +12,8 @@ class Entita:
                 DIFESA:int,
                 lista_set:list
     ):
-        self._nome = nome#
-        self._colore = colore#
+        self.NOME = NOME
+        self.COLORE = COLORE
         self._vita_massima = vita_massima#
         self._vita = vita_massima#
         self.AGILITA = AGILITA
@@ -45,26 +45,6 @@ class Entita:
         if set_valido == False: #controllo se ha trovato il set
             raise ValueError("ERRORE SET MAGIE NON TROVATO")
         
-    @property
-    def nome(self):
-        return self._nome
-    @nome.setter
-    def nome(self,nome_da_assegnare:str):
-        if type(nome_da_assegnare) == str and len(nome_da_assegnare) <= 9:
-            self._nome = nome_da_assegnare
-        else:
-            raise ValueError("ERRORE NELL'ASSEGNAZIONE DELL'NOME,\nGUARDARE SE E' LA VARIABILE UNA STRINGA E SE E' PIU' CORTA DI 9 CARATTERI")
-
-    @property
-    def colore(self):
-        return self._colore
-    @colore.setter
-    def colore(self,colore_da_assegnare:str):
-        if type(colore_da_assegnare) == str:
-            self._colore = colore_da_assegnare
-        else:
-            raise ValueError("ERRORE NELL'ASSEGNAZIONE DEL COLORE")
-    
     @property
     def vita_massima(self):
         return self._vita_massima
@@ -121,8 +101,8 @@ class Entita:
 class Alleato(Entita):
     def __init__(
                 self,
-                nome:str,
-                colore:str,
+                NOME:str,
+                COLORE:str,
                 vita_massima:int,
                 AGILITA:int,
                 POSSIBILITA_CRIT:int,
@@ -131,8 +111,8 @@ class Alleato(Entita):
                 lista_set:list,
                 sp_massimi:int,
     ):
-        super().__init__(nome, 
-                        colore,
+        super().__init__(NOME, 
+                        COLORE,
                         vita_massima,
                         AGILITA,
                         POSSIBILITA_CRIT,
@@ -148,11 +128,13 @@ class Alleato(Entita):
     
     def aumenta_statistiche_se_livellato(self):
         rifai_while = True #in caso si ha abbastanza exp per livellare più di una volta di fila
+        ha_livellato = 0 #quanti livelli ha livellato il giocatore
+        
         while rifai_while:
             rifai_while = False
             if self._exp >= self._exp_per_livellare: #controllo se si ha abbastanza exp per livellare
                 self.livello += 1 #aumenta livello
-
+                ha_livellato += 1
                 self._exp = self._exp - self.exp_per_livellare #riduci l'exp dopo aver livellato
 
                 self._exp_per_livellare = self._exp_per_livellare * 1.6 #aumenta quanto necessita livellare
@@ -163,9 +145,9 @@ class Alleato(Entita):
                 self._vita_massima = self._vita_massima * 1.1
                 self._vita_massima = self._sp_massimi * 1.3 
                 self._potenza_magie = self._potenza_magie * 1.2
+        return ha_livellato
+
             
-            
-    
     @property
     def sp_massimi(self):
         return self._sp_massimi
@@ -207,18 +189,72 @@ class Alleato(Entita):
             raise ValueError("ERRORE NELL'ASSEGNARE GLI EXP PER LIVELLARE")
 
     
-class Nemico(Entita): #TODO
-    pass
+class Nemico(Entita): 
+    def __init__(self, NOME, COLORE, vita_massima, AGILITA, POSSIBILITA_CRIT, potenza_magie, DIFESA, lista_set,DROP,EXP):
+        super().__init__(NOME, COLORE, vita_massima, AGILITA, POSSIBILITA_CRIT, potenza_magie, DIFESA, lista_set)
 
+        self.DROP = DROP #lista dei possibili drop di un nemico
+        self.EXP = EXP #exp che guadagnerà il giocatore
+    
 
 class lista_set: #TODO
     pass
 
+class Set_magia: #TODO
+    pass
+
 
 class Magia: #TODO
+    def __init__(self,
+                NOME:str,
+                livello:int,#
+                TIPO:str,
+                ad_area:bool,#
+                CONSUMA_SP:bool,
+                quanta_sp_o_hp_richiede:int#
+    ):
+        self.NOME = NOME
+        self._livello = livello
+        self.TIPO = TIPO
+        self._ad_area = ad_area
+        self.CONSUMA_SP = CONSUMA_SP
+        self._quanta_sp_o_hp_richiede = quanta_sp_o_hp_richiede
+
+    @property
+    def livello(self):
+        return self._livello
+    @livello.setter
+    def livello(self,livello_da_assegnare):
+        if type(livello_da_assegnare) == int and livello_da_assegnare > self._livello:
+            self._livello = livello_da_assegnare
+        else:
+            raise ValueError("ERRORE NELL'ASSEGNARE IL LIVELLO")
+
+
+    @property
+    def ad_area(self):
+        return self._ad_area
+    @ad_area.setter
+    def ad_area(self,ad_area_da_assegnare):
+        if type(ad_area_da_assegnare) == bool:
+            self._ad_area = ad_area_da_assegnare
+        else:
+            raise ValueError("ERRORE NELL'ASSEGNARE ad_area")
+
+
+    @property
+    def quanta_sp_o_hp_richiede(self):
+        return self._quanta_sp_o_hp_richiede
+    @quanta_sp_o_hp_richiede.setter
+    def quanta_sp_o_hp_richiede(self,quanta_sp_o_hp_richiede_da_assegnare):
+        if type(quanta_sp_o_hp_richiede_da_assegnare) == int:
+            self._quanta_sp_o_hp_richiede = quanta_sp_o_hp_richiede_da_assegnare
+        else:
+            raise ValueError("ERRORE NELL'ASSEGNARE quanta_sp_o_hp_richiede")
+
+def calcola_exp(alleato,nemico):
+    alleato._exp = alleato._exp + nemico.EXP
+    ha_livellato = alleato.aumenta_statistiche_se_livellato()
+
+def assegna_drop(alleato,nemico): #TODO
     pass
-
-
-def calcola_exp(): #TODO
-    pass
-

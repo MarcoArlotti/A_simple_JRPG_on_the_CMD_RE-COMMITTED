@@ -2,12 +2,12 @@
 classDiagram
 Entita --|> Alleato
 Entita --|> Nemico
-Entita --> set_magia :possiede
-set_magia --> Magia :possiede
+Entita "1"--> "1..n" Set_magia :possiede
+Set_magia "1" --> "1..n" Magia :contiene
 
 class Entita {
-    nome :str
-    colore :str
+    NOME :str
+    COLORE :str
     vita_massima :int
     AGILITA :int
     POSSIBILITA_CRIT :int
@@ -25,10 +25,11 @@ class Alleato {
 }
 
 class Nemico{
-    drop
+    DROP :list
+    EXP :float
 }
 
-class set_magia {
+class Set_magia {
     lista_magie :list
     debolezze :list
     cosa_annulla :list
@@ -37,11 +38,11 @@ class set_magia {
 }
 
 class Magia {
-    nome : str
+    NOME : str
     livello : int
-    tipo : str
+    TIPO : str
     ad_area : bool
-    consuma_sp :bool
-    quanto_richiede :int
+    CONSUMA_SP :bool
+    quanta_sp_o_hp_richiede :int
 }
 ```
