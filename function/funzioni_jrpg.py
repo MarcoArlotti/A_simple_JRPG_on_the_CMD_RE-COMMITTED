@@ -37,7 +37,7 @@ class Entita:
         set_valido = False 
         for set in self._lista_set:
             
-            if set._lista_magie == set_da_verificare._lista_magie and set._debolezze == set_da_verificare._debolezze and set._cosa_annulla == set_da_verificare._cosa_annulla:
+            if set._lista_magie == set_da_verificare._lista_magie and set.DEBOLEZZE == set_da_verificare.DEBOLEZZE and set.COSA_ANNULLA == set_da_verificare.COSA_ANNULLA:
                 #allora il set è presente
                 set_valido = True #ho trovato il set
                 self._set_in_uso = set_da_verificare
