@@ -195,16 +195,44 @@ class Nemico(Entita):
 
         self.DROP = DROP #lista dei possibili drop di un nemico
         self.EXP = EXP #exp che guadagnerà il giocatore
+
+class Set_magia:
+    def __init__(self,
+                lista_magie:list,
+                DEBOLEZZE:list,
+                COSA_ANNULLA:list,
+        ):
+        self._lista_magie = lista_magie
+        self.DEBOLEZZE = DEBOLEZZE
+        self.COSA_ANNULLA = COSA_ANNULLA
+    
+    #@property #FORSE SERVE
+    #def lista_magie(self):
+    #    return self._lista_magie
+    #@lista_magie.setter
+    #def lista_magie(self,lista_magie_da_assegnare):
+    #    if type(lista_magie_da_assegnare) == list and lista_magie_da_assegnare != []:
+    #        self._lista_magie = lista_magie_da_assegnare
+    #    else:
+    #        raise ValueError("ERRORE NELL'ASSEGNAZIONE DELLA lista_magie")
     
 
-class lista_set: #TODO
-    pass
+    def aggiungi_magia(self,magia):
+        self._lista_magie.append(magia)
+    
+    def rimuovi_magia(self,magia_da_verificare):
+        magia_valida = False 
+        for magia in self._lista_magie:
+            
+            if magia.NOME == magia_da_verificare.NOME and magia._livello == magia_da_verificare._livello and magia.TIPO == magia_da_verificare.TIPO and magia._ad_area == magia_da_verificare._ad_area and magia.CONSUMA_SP == magia_da_verificare.CONSUMA_SP and magia._quanta_sp_o_hp_richiede == magia_da_verificare._quanta_sp_o_hp_richiede:
+                #allora la magia è presente
+                magia_valida = True #ho trovato la magia
+                self._lista_magie.remove(magia_da_verificare)
+                break
+        if magia_valida == False: #controllo se ha trovato la magia
+            raise ValueError("ERRORE magia NON TROVATO")
 
-class Set_magia: #TODO
-    pass
-
-
-class Magia: #TODO
+class Magia:
     def __init__(self,
                 NOME:str,
                 livello:int,#
