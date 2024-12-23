@@ -1,6 +1,6 @@
 #import py_cui
-#from library.funzioni_jrpg import Entita, Alleato, Nemico, lista_set, Magia
-
+#from library.funzioni_jrpg import Entita, Alleato, Nemico, Magia, Set_magia
+import library.funzioni_jrpg
 
 
 #magia
