@@ -27,6 +27,7 @@ class Alleato {
 class Nemico{
     DROP :list
     EXP :float
+    -nemico_Attacca()
 }
 
 class Set_magia {

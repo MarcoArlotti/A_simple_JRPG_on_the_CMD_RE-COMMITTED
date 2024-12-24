@@ -1,3 +1,4 @@
 import funzioni_jrpg
 
-main()
+def main():#TODO
+    pass
