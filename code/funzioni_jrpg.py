@@ -1,5 +1,5 @@
 import os
-
+from random import choice
 class Entita:
     def __init__(
                 self,
@@ -27,6 +27,11 @@ class Entita:
         self._statistiche_momentanee = (0,0,0)# (ATK,DEF,AGI)
         self._set_in_uso = self._lista_set[0] #assegna di base il primo set nella lista, preso dalla lista dei set
     
+
+    def __str__(self):
+        return f"\n{self.NOME},\n{self.COLORE},\n{self._vita_massima},\n{self._vita},\n{self.AGILITA},\n{self.POSSIBILITA_CRIT},\n{self._potenza_magie},\n{self.DIFESA},\n{self._lista_set},\n{self._set_in_uso}"
+    
+
     def cambia_set(self,set_da_verificare):
         """
         questa funzione si occupa di verificare se
@@ -44,6 +49,7 @@ class Entita:
                 break
         if set_valido == False: #controllo se ha trovato il set
             raise ValueError("ERRORE SET MAGIE NON TROVATO")
+        return f"\n{self._set_in_uso._lista_magie},\n{self._set_in_uso.DEBOLEZZE},\n{self._set_in_uso.COSA_ANNULLA}" #DEBUG
         
     @property
     def vita_massima(self):
@@ -126,6 +132,7 @@ class Alleato(Entita):
         self.livello = int(0)
         self._exp_per_livellare = float(10)#
     
+    
     def aumenta_statistiche_se_livellato(self):
         rifai_while = True #in caso si ha abbastanza exp per livellare più di una volta di fila
         ha_livellato = 0 #quanti livelli ha livellato il giocatore
@@ -196,6 +203,15 @@ class Nemico(Entita):
         self.DROP = DROP #lista dei possibili drop di un nemico
         self.EXP = EXP #exp che guadagnerà il giocatore
 
+    def cosa_fa_nemico(self): #TODO
+        pass
+
+    def nemico_Attacca(self,lista_alleati_vivi): #TODO
+        alleato_scelto = choice(lista_alleati_vivi)
+
+        mossa_scelta = cosa_fa_nemico(self)
+
+        
 class Set_magia:
     def __init__(self,
                 lista_magie:list,
