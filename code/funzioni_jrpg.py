@@ -1,5 +1,6 @@
 import os
 from random import choice
+
 class Entita:
     def __init__(
                 self,

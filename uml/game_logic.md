@@ -47,5 +47,6 @@ class Magia {
     ad_area : bool
     CONSUMA_SP :bool
     quanta_sp_o_hp_richiede :int
+    
 }
 ```

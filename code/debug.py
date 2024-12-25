@@ -1,9 +1,9 @@
 #import py_cui
-from funzioni_jrpg import Entita, Magia, Set_magia
+from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita
 import math
 
 
-print(math.log2(29))
+
 """
 
 test_magia1 = Magia("bomba",2,"esplosivo",True,True,10)
