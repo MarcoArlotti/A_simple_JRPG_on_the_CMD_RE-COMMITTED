@@ -1,8 +1,10 @@
 #import py_cui
 from funzioni_jrpg import Entita, Magia, Set_magia
+import math
 
 
-
+print(math.log2(29))
+"""
 
 test_magia1 = Magia("bomba",2,"esplosivo",True,True,10)
 test_magia2 = Magia("bomba",3,"esplosivo",True,True,14)
@@ -26,3 +28,4 @@ test_entita = Entita("osuba","giallo",200,20,10,10,20,test_lista_set)
 print(test_entita.cambia_set(test_set_magia3))
 
 print(test_entita.cambia_set(test_set_magia1))
+"""

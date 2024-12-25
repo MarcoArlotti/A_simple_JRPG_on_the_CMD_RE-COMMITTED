@@ -194,7 +194,6 @@ class Alleato(Entita):
             self._exp_per_livellare = exp_per_livellare_da_assegnare
         else:
             raise ValueError("ERRORE NELL'ASSEGNARE GLI EXP PER LIVELLARE")
-
     
 class Nemico(Entita): 
     def __init__(self, NOME, COLORE, vita_massima, AGILITA, POSSIBILITA_CRIT, potenza_magie, DIFESA, lista_set,DROP,EXP):
@@ -203,14 +202,38 @@ class Nemico(Entita):
         self.DROP = DROP #lista dei possibili drop di un nemico
         self.EXP = EXP #exp che guadagnerà il giocatore
 
-    def cosa_fa_nemico(self): #TODO
-        pass
+    def cosa_fa_nemico(self):
+        magia_scelta = choice(self._set_in_uso._lista_magie)
+        return magia_scelta
 
-    def nemico_Attacca(self,lista_alleati_vivi): #TODO
+    def fai_magia(self,alleato_scelto,magia_scelta):
+        debole = False
+        annulla = False
+        for debolezza in alleato_scelto._set_in_uso.DEBOLEZZE:
+            if magia_scelta.TIPO == debolezza:
+                debole = True
+
+        for annulla in alleato_scelto._set_in_uso.COSA_ANNULLA:
+            if magia_scelta.TIPO == annulla:
+                annulla = True
+
+        if annulla == True:
+            danno = 0
+        else:
+            livello = self._set_in_uso._livello #di quanto aumentare il danno
+
+            if debole == True:
+                danno = 30 * livello
+            else:
+                danno = 20 * livello
+        alleato_scelto._vita = alleato_scelto._vita - int(danno)
+        return danno
+
+    def nemico_Attacca(self,lista_alleati_vivi):
         alleato_scelto = choice(lista_alleati_vivi)
-
-        mossa_scelta = cosa_fa_nemico(self)
-
+        magia_scelta = cosa_fa_nemico(self)
+        danno = fai_magia(self,alleato_scelto,magia_scelta)
+        print(danno)
         
 class Set_magia:
     def __init__(self,

@@ -27,13 +27,15 @@ class Alleato {
 class Nemico{
     DROP :list
     EXP :float
-    -nemico_Attacca()
+    -cosa_fa_nemico()
+    -fai_magia(alleato_scelto,magia_scelta)
+    -nemico_Attacca(lista_alleati_vivi)
 }
 
 class Set_magia {
     lista_magie :list
-    debolezze :list
-    cosa_annulla :list
+    DEBOLEZZE :list
+    COSA_ANNULLA :list
     -aggiungi_magia(magia)
     -rimuovi_magia(magia)
 }
