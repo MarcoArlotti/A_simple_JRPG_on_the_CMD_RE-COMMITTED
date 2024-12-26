@@ -2,8 +2,6 @@
 from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita
 import math
 
-
-
 """
 
 test_magia1 = Magia("bomba",2,"esplosivo",True,True,10)

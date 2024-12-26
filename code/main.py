@@ -1,6 +1,6 @@
 import os
 from random import choice
-from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita
+from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita,turno
 
 def main():
     #creazione classe OSUBA
@@ -39,5 +39,5 @@ def main():
     #creazione classe ...#TODO
 
     lista_giocatori = [osuba] #TODO
-
+    turno(lista_giocatori)
 main()

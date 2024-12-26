@@ -1,5 +1,5 @@
 import os
-from random import choice
+from random import choice,randint
 
 class Entita:
     def __init__(
@@ -155,7 +155,24 @@ class Alleato(Entita):
                 self._potenza_magie = self._potenza_magie * 1.2
         return ha_livellato
 
-            
+    def scegli_magia(self):
+        n = 0
+        for magia in self._set_in_uso._lista_magie:
+            n += 1
+            if magia.CONSUMA_SP == True:
+                print(f"\n{n}:{magia.NOME},{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}SP")
+            else:
+                print(f"\n{n}:{magia.NOME},{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}HP")
+        
+        scelta_valida = True
+        while scelta_valida:
+            magia_scelta = input("inserire il numero")
+            if type(magia_scelta) == int and 0 < magia_scelta <= len(self._set_in_uso._lista_magie):
+                scelta_valida = False
+
+        magia_scelta = self._set_in_uso._lista_magie[magia_scelta - 1]
+        return magia_scelta
+    
     @property
     def sp_massimi(self):
         return self._sp_massimi
@@ -202,6 +219,17 @@ class Nemico(Entita):
 
         self.DROP = DROP #lista dei possibili drop di un nemico
         self.EXP = EXP #exp che guadagnerà il giocatore
+        self._sp = 9999
+    
+    @property
+    def sp(self):
+        return self._sp
+    @sp.setter
+    def sp(self,sp_da_assegnare:int):
+        if type(sp_da_assegnare) == int:
+            self._sp = sp_da_assegnare
+        else:
+            raise ValueError("ERRORE NELL'ASSEGNAZIONE DELL'SP")
 
     def cosa_fa_nemico(self):
         magia_scelta = choice(self._set_in_uso._lista_magie)
@@ -232,8 +260,8 @@ class Nemico(Entita):
 
     def nemico_Attacca(self,lista_alleati_vivi):
         alleato_scelto = choice(lista_alleati_vivi)
-        magia_scelta = cosa_fa_nemico(self)
-        danno = fai_magia(self,alleato_scelto,magia_scelta)
+        magia_scelta = cosa_fa_nemico()
+        danno = fai_magia(alleato_scelto,magia_scelta)
         print(danno)
         
 class Set_magia:
@@ -325,4 +353,54 @@ def calcola_exp(alleato,nemico):
     ha_livellato = alleato.aumenta_statistiche_se_livellato()
 
 def assegna_drop(alleato,nemico): #TODO
+    if not nemico.DROP == None:
+        pass
     pass
+
+def genera_nemici(): #TODO
+    magia3 = Magia("testata",2,"bho",False,True,1) #TODO cambiare il tipo di magia
+    magia4 = Magia("pugno",1,"bho",False,True,1)
+    magia5 = Magia("colpo con spada",3,"bho",True,True,1)
+    magia6 = Magia("carica",3,"bho",False,True,1)
+
+    lista_magie_goblin = [magia3,magia4]
+
+    set_goblin = Set_magia(lista_magie_goblin)
+    lista_set_goblin = [set_goblin]
+    goblin = Nemico("Goblin","red",86,30,10,10,20,lista_set_goblin,None,10)
+
+    lista_magie_cavaliere = [magia5]
+
+    set_cavaliere = Set_magia(lista_magie_cavaliere)
+    lista_set_cavaliere = [set_cavaliere]
+    cavaliere_nero = Nemico("Cavaliere nero","red",120,4,2,2,10,lista_set_cavaliere,None,15.5)
+
+    lista_magie_cavaliere_normale = [magia6]
+
+    set_cavaliere_normale = Set_magia(lista_magie_cavaliere_normale)
+    lista_set_cavaliere_normale = [set_cavaliere]
+    cavaliere_normale = Nemico("Cavaliere","red",80,4,2,2,10,lista_set_cavaliere,None,15.5)
+
+    lista_nemici_tutti = [goblin,cavaliere_nero,cavaliere_normale]
+
+    quanti_nemici_generare = randint(1,3)
+    
+    lista_nemici = []
+    for i in range(quanti_nemici_generare):
+        nemico_scelto = choice(lista_nemici_tutti)
+        lista_nemici.append(nemico_scelto)
+    return lista_nemici
+
+def turno(lista_giocatori): #TODO
+    lista_nemici = genera_nemici()
+
+    for i in lista_giocatori:
+        scelta = input(f"turno di {i.NOME};\n1:magia,2:cambia set,3,4\n")
+        if scelta == 1:
+            #scegli magia
+            magia_scelta = i.scegli_magia()
+            pass
+        elif scelta == 2:
+            pass
+            #cambia set
+            #i.cambia_set(set_da_verificare)
