@@ -133,6 +133,45 @@ class Alleato(Entita):
         self.livello = int(0)
         self._exp_per_livellare = float(10)#
     
+    def fai_magia(self,nemico,magia_scelta):
+        debole = False
+        annulla = False
+        for debolezza in nemico._set_in_uso.DEBOLEZZE:
+            if magia_scelta.TIPO == debolezza:
+                debole = True
+
+        for annulla in nemico._set_in_uso.COSA_ANNULLA:
+            if magia_scelta.TIPO == annulla:
+                annulla = True
+
+        if annulla == True:
+            danno = 0
+        else:
+            livello = self.livello #di quanto aumentare il danno
+
+            if debole == True:
+                danno = 30 * livello
+            else:
+                danno = 20 * livello
+        nemico._vita = nemico._vita - int(danno)
+        return danno
+    
+    def scegli_chi_attacare(self,lista_nemici):
+        rifai = True
+        while rifai:
+            rifai = False
+            i = 1
+            os.system("cls")
+
+            for nemico in lista_nemici:
+                print(f"{i}|\t{nemico.NOME}: {nemico._vita_massima}/{nemico._vita}HP")
+                i += 1
+            n_scelto = int(input("scegliere il numero:"))
+            if n_scelto > len(lista_nemici) and n_scelto < len(lista_nemici):
+                rifai = True
+
+        nemico = lista_nemici[n_scelto - 1]
+        return nemico
     
     def aumenta_statistiche_se_livellato(self):
         rifai_while = True #in caso si ha abbastanza exp per livellare più di una volta di fila
@@ -154,7 +193,7 @@ class Alleato(Entita):
                 self._vita_massima = self._sp_massimi * 1.3 
                 self._potenza_magie = self._potenza_magie * 1.2
         return ha_livellato
-
+    
     def scegli_magia(self):
         n = 0
         for magia in self._set_in_uso._lista_magie:
@@ -167,6 +206,7 @@ class Alleato(Entita):
         scelta_valida = True
         while scelta_valida:
             magia_scelta = input("inserire il numero")
+            magia_scelta = int(magia_scelta) #se no lo prende come testo
             if type(magia_scelta) == int and 0 < magia_scelta <= len(self._set_in_uso._lista_magie):
                 scelta_valida = False
 
@@ -365,26 +405,26 @@ def genera_nemici(): #TODO
 
     lista_magie_goblin = [magia3,magia4]
 
-    set_goblin = Set_magia(lista_magie_goblin)
+    set_goblin = Set_magia(lista_magie_goblin,[],[])
     lista_set_goblin = [set_goblin]
     goblin = Nemico("Goblin","red",86,30,10,10,20,lista_set_goblin,None,10)
 
     lista_magie_cavaliere = [magia5]
 
-    set_cavaliere = Set_magia(lista_magie_cavaliere)
+    set_cavaliere = Set_magia(lista_magie_cavaliere,[],[])
     lista_set_cavaliere = [set_cavaliere]
     cavaliere_nero = Nemico("Cavaliere nero","red",120,4,2,2,10,lista_set_cavaliere,None,15.5)
 
     lista_magie_cavaliere_normale = [magia6]
 
-    set_cavaliere_normale = Set_magia(lista_magie_cavaliere_normale)
-    lista_set_cavaliere_normale = [set_cavaliere]
-    cavaliere_normale = Nemico("Cavaliere","red",80,4,2,2,10,lista_set_cavaliere,None,15.5)
+    set_cavaliere_normale = Set_magia(lista_magie_cavaliere_normale,[],[])
+    lista_set_cavaliere_normale = [set_cavaliere_normale]
+    cavaliere_normale = Nemico("Cavaliere","red",80,4,2,2,10,lista_set_cavaliere_normale,None,15.5)
 
     lista_nemici_tutti = [goblin,cavaliere_nero,cavaliere_normale]
 
     quanti_nemici_generare = randint(1,3)
-    
+
     lista_nemici = []
     for i in range(quanti_nemici_generare):
         nemico_scelto = choice(lista_nemici_tutti)
@@ -394,13 +434,32 @@ def genera_nemici(): #TODO
 def turno(lista_giocatori): #TODO
     lista_nemici = genera_nemici()
 
-    for i in lista_giocatori:
-        scelta = input(f"turno di {i.NOME};\n1:magia,2:cambia set,3,4\n")
-        if scelta == 1:
+    for giocatore in lista_giocatori:
+        os.system("cls")
+        
+        for nemico in lista_nemici:
+            print(f"\n{nemico.NOME}: {nemico._vita_massima}/{nemico._vita}",end="\t")
+        print("\n\n")
+
+        scelta = input(f"Turno di {giocatore.NOME};\n1:magia,2:cambia set,3:,4:\n")
+        if scelta == "1":
             #scegli magia
-            magia_scelta = i.scegli_magia()
-            pass
-        elif scelta == 2:
+            magia_scelta = giocatore.scegli_magia()
+
+            if magia_scelta._ad_area == False:
+                nemico = giocatore.scegli_chi_attacare(lista_nemici)
+                danno = giocatore.fai_magia(nemico,magia_scelta)
+                print(f"{nemico.NOME} ha subito -{danno}")
+            else:
+                for nemico in lista_nemici:
+                    danno = giocatore.fai_magia(nemico,magia_scelta)
+                    print(f"{nemico.NOME} ha subito -{danno}")
+
+
+            
+            
+
+        elif scelta == "2":
             pass
             #cambia set
             #i.cambia_set(set_da_verificare)

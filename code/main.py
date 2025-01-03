@@ -9,12 +9,12 @@ def main():
     magia3 = Magia("testata",2,"bho",False,False,12) #TODO cambiare il tipo di magia
     magia4 = Magia("pugno",1,"bho",False,True,6)
     magia5 = Magia("ISTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
-    magia6 = Magia("SIGILLO",999,"bho",True,False,osuba._vita_massima - 1) #TODO DA NON LASCIARE
+    
     magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
 
     osuba_lista_magie1 = [magia1,magia2,magia7]
     osuba_lista_magie2 = [magia3,magia4]
-    osuba_lista_magie3 = [magia5,magia6]
+    osuba_lista_magie3 = [magia5]
     
     osuba_set1 = Set_magia(osuba_lista_magie1,[],[]) #TODO
     osuba_set2 = Set_magia(osuba_lista_magie2,[],[]) #TODO
@@ -34,9 +34,20 @@ def main():
         POSSIBILITA_CRIT = 20,
         potenza_magie = 15,
         DIFESA = 10,
-        lista_set = lista_set_osuba
+        lista_set = lista_set_osuba,
+        sp_massimi = 40,
     )
     #creazione classe ...#TODO
+    magia6 = Magia("SIGILLO",999,"bho",True,False,osuba._vita_massima - 1) #TODO DA NON LASCIARE
+    osuba_lista_magie3 = [magia5,magia6]
+    osuba_set3 = Set_magia(osuba_lista_magie3,[],[])
+
+    lista_set_osuba = [
+        osuba_set1,
+        osuba_set2,
+        osuba_set3
+    ]
+    osuba._lista_set = lista_set_osuba
 
     lista_giocatori = [osuba] #TODO
     turno(lista_giocatori)
