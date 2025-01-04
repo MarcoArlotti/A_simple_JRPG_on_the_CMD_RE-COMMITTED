@@ -4,6 +4,9 @@ from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita,turno
 
 def main():
     #creazione classe OSUBA
+    vita_massima = 200
+    magia6 = Magia("SIGILLO",999,"bho",True,False,vita_massima - 1) #TODO DA NON LASCIARE
+
     magia1 = Magia("bomba esplosiva",1,"fuoco",True,True,12)
     magia2 = Magia("freccia infuocata",2,"fuoco",False,True,6)
     magia3 = Magia("testata",2,"bho",False,False,12) #TODO cambiare il tipo di magia
@@ -11,8 +14,8 @@ def main():
     magia5 = Magia("ISTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
     
     magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
-
-    osuba_lista_magie1 = [magia1,magia2,magia7]
+    
+    osuba_lista_magie1 = [magia1,magia2,magia7,magia5,magia6]
     osuba_lista_magie2 = [magia3,magia4]
     osuba_lista_magie3 = [magia5]
     

@@ -130,7 +130,7 @@ class Alleato(Entita):
         self._sp_massimi = sp_massimi#
         self._sp = sp_massimi#
         self._exp = float(0)#
-        self.livello = int(0)
+        self.livello = int(1)
         self._exp_per_livellare = float(10)#
     
     def fai_magia(self,nemico,magia_scelta):
@@ -147,12 +147,14 @@ class Alleato(Entita):
         if annulla == True:
             danno = 0
         else:
-            livello = self.livello #di quanto aumentare il danno
-
+            livello = magia_scelta._livello #di quanto aumentare il danno
             if debole == True:
                 danno = 30 * livello
             else:
                 danno = 20 * livello
+
+                annulla = True
+                
         nemico._vita = nemico._vita - int(danno)
         return danno
     
@@ -167,7 +169,7 @@ class Alleato(Entita):
                 print(f"{i}|\t{nemico.NOME}: {nemico._vita_massima}/{nemico._vita}HP")
                 i += 1
             n_scelto = int(input("scegliere il numero:"))
-            if n_scelto > len(lista_nemici) and n_scelto < len(lista_nemici):
+            if n_scelto > len(lista_nemici) or n_scelto <= 0:
                 rifai = True
 
         nemico = lista_nemici[n_scelto - 1]
@@ -180,37 +182,44 @@ class Alleato(Entita):
         while rifai_while:
             rifai_while = False
             if self._exp >= self._exp_per_livellare: #controllo se si ha abbastanza exp per livellare
+                print(f"{self.NOME} è salito di livello!;\n{self._exp}xp/{self._exp_per_livellare}xp per livellare")
                 self.livello += 1 #aumenta livello
                 ha_livellato += 1
                 self._exp = self._exp - self.exp_per_livellare #riduci l'exp dopo aver livellato
 
                 self._exp_per_livellare = self._exp_per_livellare * 1.6 #aumenta quanto necessita livellare
 
+                vita_massima_prima = self._vita_massima
+                sp_massimi_prima = self._sp_massimi
+                potenza_magie_prima = self._potenza_magie
                 #aumento statistiche
                 self._vita_massima = self._vita_massima * 1.1
                 self._sp_massimi = self._sp_massimi * 1.3
-                self._vita_massima = self._vita_massima * 1.1
-                self._vita_massima = self._sp_massimi * 1.3 
                 self._potenza_magie = self._potenza_magie * 1.2
+                print(f"+{int(self._vita_massima - vita_massima_prima)}|max hp")
+                print(f"+{int(self._sp_massimi - sp_massimi_prima)}|max sp")
+                print(f"+{int(self._potenza_magie - potenza_magie_prima)}|potenza delle magie")
+
         return ha_livellato
     
     def scegli_magia(self):
-        n = 0
-        for magia in self._set_in_uso._lista_magie:
-            n += 1
-            if magia.CONSUMA_SP == True:
-                print(f"\n{n}:{magia.NOME},{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}SP")
-            else:
-                print(f"\n{n}:{magia.NOME},{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}HP")
-        
-        scelta_valida = True
-        while scelta_valida:
-            magia_scelta = input("inserire il numero")
-            magia_scelta = int(magia_scelta) #se no lo prende come testo
-            if type(magia_scelta) == int and 0 < magia_scelta <= len(self._set_in_uso._lista_magie):
-                scelta_valida = False
+        scelta_non_valida = True
 
-        magia_scelta = self._set_in_uso._lista_magie[magia_scelta - 1]
+        while scelta_non_valida:
+            scelta_non_valida = False
+            n = 0
+            for magia in self._set_in_uso._lista_magie:
+                n += 1
+                if magia.CONSUMA_SP == True:
+                    print(f"\n{n}|\t{magia.NOME},LV{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}SP")
+                else:
+                    print(f"\n{n}|\t{magia.NOME},LV{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}HP")
+
+            magia_scelta = (int(input("inserire il numero"))) - 1 #TODO TRY EXEPT
+            if magia_scelta < 0 or magia_scelta > len(self._set_in_uso._lista_magie):
+                scelta_non_valida = True
+
+        magia_scelta = self._set_in_uso._lista_magie[magia_scelta]
         return magia_scelta
     
     @property
@@ -388,8 +397,8 @@ class Magia:
         else:
             raise ValueError("ERRORE NELL'ASSEGNARE quanta_sp_o_hp_richiede")
 
-def calcola_exp(alleato,nemico):
-    alleato._exp = alleato._exp + nemico.EXP
+def calcola_exp(alleato,exp_da_dare_a_fine_partita):
+    alleato._exp = alleato._exp + exp_da_dare_a_fine_partita
     ha_livellato = alleato.aumenta_statistiche_se_livellato()
 
 def assegna_drop(alleato,nemico): #TODO
@@ -432,34 +441,53 @@ def genera_nemici(): #TODO
     return lista_nemici
 
 def turno(lista_giocatori): #TODO
+    exp_da_dare_a_fine_partita = 0
     lista_nemici = genera_nemici()
+    fine_partita = False
+    while fine_partita == False:
 
-    for giocatore in lista_giocatori:
-        os.system("cls")
-        
-        for nemico in lista_nemici:
-            print(f"\n{nemico.NOME}: {nemico._vita_massima}/{nemico._vita}",end="\t")
-        print("\n\n")
-
-        scelta = input(f"Turno di {giocatore.NOME};\n1:magia,2:cambia set,3:,4:\n")
-        if scelta == "1":
-            #scegli magia
-            magia_scelta = giocatore.scegli_magia()
-
-            if magia_scelta._ad_area == False:
-                nemico = giocatore.scegli_chi_attacare(lista_nemici)
-                danno = giocatore.fai_magia(nemico,magia_scelta)
-                print(f"{nemico.NOME} ha subito -{danno}")
-            else:
+        if fine_partita == False:
+            for giocatore in lista_giocatori:
+                os.system("cls")
                 for nemico in lista_nemici:
-                    danno = giocatore.fai_magia(nemico,magia_scelta)
-                    print(f"{nemico.NOME} ha subito -{danno}")
+                    if nemico._vita <= 0:
+                        exp_da_dare_a_fine_partita =+ nemico.EXP
+                        #TODO da fare anche con i drop
+                        lista_nemici.remove(nemico)
 
+                if len(lista_nemici) == 0: #nemici sconfitti, fine della partita
+                    fine_partita = True
 
-            
-            
+                for nemico in lista_nemici:
+                    print(f"\n{nemico.NOME}: {nemico._vita}/{nemico._vita_massima}HP",end="\t")
+                print("\n\n")
+                if fine_partita == False:
+                    scelta = input(f"Turno di {giocatore.NOME};\n1:magia,   2:cambia set,   3:, 4:  \n")
+                    if scelta == "1":
+                        #scegli magia
+                        magia_scelta = giocatore.scegli_magia()
 
-        elif scelta == "2":
-            pass
-            #cambia set
-            #i.cambia_set(set_da_verificare)
+                        if magia_scelta._ad_area == False:
+                            nemico = giocatore.scegli_chi_attacare(lista_nemici)
+                            danno = giocatore.fai_magia(nemico,magia_scelta)
+                            print(f"{nemico.NOME} ha subito - {danno}")
+                            x = input("")
+                        else:
+                            for nemico in lista_nemici:
+                                danno = giocatore.fai_magia(nemico,magia_scelta)
+                                print(f"{nemico.NOME} ha subito -{danno}")
+                            x = input("")
+
+                    elif scelta == "2":
+                        ##TODO
+                        #for set in giocatore:
+                        #    print(f"{set.NOME}")
+                        #giocatore.cambia_set(set_da_verificare)
+                        pass
+
+    print("vittoria per:")
+    for giocatore in lista_giocatori:
+        print(f"|{giocatore.NOME}")
+        x = input("")
+        os.system("cls")
+        calcola_exp(giocatore,exp_da_dare_a_fine_partita)
