@@ -1,6 +1,12 @@
 #import py_cui
 from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita
 import math
+from sys import platform
+
+if platform == "linux":
+    clear = "clear"   
+elif platform == "win32":
+    clear = "cls"
 
 """
 

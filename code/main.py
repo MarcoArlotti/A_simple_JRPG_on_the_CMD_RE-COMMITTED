@@ -2,16 +2,23 @@ import os
 from random import choice
 from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita,turno
 
+from sys import platform
+
+if platform == "linux":
+    clear = "clear"   
+elif platform == "win32":
+    clear = "cls"
+
 def main():
     #creazione classe OSUBA
     vita_massima = 200
     magia6 = Magia("SIGILLO",999,"bho",True,False,vita_massima - 1) #TODO DA NON LASCIARE
 
-    magia1 = Magia("bomba esplosiva",1,"fuoco",True,True,12)
-    magia2 = Magia("freccia infuocata",2,"fuoco",False,True,6)
-    magia3 = Magia("testata",2,"bho",False,False,12) #TODO cambiare il tipo di magia
-    magia4 = Magia("pugno",1,"bho",False,True,6)
-    magia5 = Magia("ISTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
+    magia1 = Magia("BOMBA",1,"fuoco",True,True,12)
+    magia2 = Magia("FRECCIA INFUOCATA",2,"fuoco",False,True,6)
+    magia3 = Magia("TESTATA",2,"bho",False,False,12) #TODO cambiare il tipo di magia
+    magia4 = Magia("PUGNO",1,"bho",False,True,6)
+    magia5 = Magia("INSTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
     
     magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
     
@@ -19,7 +26,7 @@ def main():
     osuba_lista_magie2 = [magia3,magia4]
     osuba_lista_magie3 = [magia5]
     
-    osuba_set1 = Set_magia("OSSERVA",osuba_lista_magie1,[],[]) #TODO
+    osuba_set1 = Set_magia("TECNICHE \"OSSERVA\"",osuba_lista_magie1,[],[]) #TODO
     osuba_set2 = Set_magia("CORPO A CORPO",osuba_lista_magie2,[],[]) #TODO
     osuba_set3 = Set_magia("SET MOLTO BILANCIATO",osuba_lista_magie3,[],[]) #TODO
 
@@ -53,5 +60,23 @@ def main():
     osuba._lista_set = lista_set_osuba
 
     lista_giocatori = [osuba] #TODO
-    turno(lista_giocatori)
+    continuare = True
+    while continuare:
+        continuare = False
+        turno(lista_giocatori)
+        non_valido = True
+        x = input("\n")#così facendo le statistiche si possonon leggere
+        while non_valido:
+            os.system(clear)
+            risposta = str(input("VUOI INIZIARE UN ALTRA BATTAGLIA?\n\nyes\nno\n"))
+            if risposta == "yes" or risposta == "no":
+                non_valido = False
+
+        if risposta == "yes":
+            continuare = True
+        elif risposta == "no":
+            continuare = False
+            os.system(clear)
+            print("Grazie per aver giocato,\n\nspero che la DEMO sia stata a priva di BUG!\n\nArlo.")
+
 main()
