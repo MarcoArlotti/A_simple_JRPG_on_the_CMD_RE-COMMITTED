@@ -19,9 +19,9 @@ def main():
     osuba_lista_magie2 = [magia3,magia4]
     osuba_lista_magie3 = [magia5]
     
-    osuba_set1 = Set_magia(osuba_lista_magie1,[],[]) #TODO
-    osuba_set2 = Set_magia(osuba_lista_magie2,[],[]) #TODO
-    osuba_set3 = Set_magia(osuba_lista_magie3,[],[]) #TODO
+    osuba_set1 = Set_magia("OSSERVA",osuba_lista_magie1,[],[]) #TODO
+    osuba_set2 = Set_magia("CORPO A CORPO",osuba_lista_magie2,[],[]) #TODO
+    osuba_set3 = Set_magia("SET MOLTO BILANCIATO",osuba_lista_magie3,[],[]) #TODO
 
     lista_set_osuba = [
         osuba_set1,
@@ -43,7 +43,7 @@ def main():
     #creazione classe ...#TODO
     magia6 = Magia("SIGILLO",999,"bho",True,False,osuba._vita_massima - 1) #TODO DA NON LASCIARE
     osuba_lista_magie3 = [magia5,magia6]
-    osuba_set3 = Set_magia(osuba_lista_magie3,[],[])
+    osuba_set3 = Set_magia("SET MOLTO BILANCIATO",osuba_lista_magie3,[],[])
 
     lista_set_osuba = [
         osuba_set1,

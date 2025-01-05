@@ -33,24 +33,8 @@ class Entita:
         return f"\n{self.NOME},\n{self.COLORE},\n{self._vita_massima},\n{self._vita},\n{self.AGILITA},\n{self.POSSIBILITA_CRIT},\n{self._potenza_magie},\n{self.DIFESA},\n{self._lista_set},\n{self._set_in_uso}"
     
 
-    def cambia_set(self,set_da_verificare):
-        """
-        questa funzione si occupa di verificare se
-        il set dato in input
-        sia presente nella lista dei set,
-        se è presente lo imposta come set in uso
-        """
-        set_valido = False 
-        for set in self._lista_set:
-            
-            if set._lista_magie == set_da_verificare._lista_magie and set.DEBOLEZZE == set_da_verificare.DEBOLEZZE and set.COSA_ANNULLA == set_da_verificare.COSA_ANNULLA:
-                #allora il set è presente
-                set_valido = True #ho trovato il set
-                self._set_in_uso = set_da_verificare
-                break
-        if set_valido == False: #controllo se ha trovato il set
-            raise ValueError("ERRORE SET MAGIE NON TROVATO")
-        return f"\n{self._set_in_uso._lista_magie},\n{self._set_in_uso.DEBOLEZZE},\n{self._set_in_uso.COSA_ANNULLA}" #DEBUG
+    def cambia_set(self,posizione_set):
+        self._set_in_uso = self._lista_set[posizione_set]
         
     @property
     def vita_massima(self):
@@ -206,17 +190,24 @@ class Alleato(Entita):
         scelta_non_valida = True
 
         while scelta_non_valida:
+            os.system("cls")
             scelta_non_valida = False
             n = 0
             for magia in self._set_in_uso._lista_magie:
                 n += 1
                 if magia.CONSUMA_SP == True:
-                    print(f"\n{n}|\t{magia.NOME},LV{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}SP")
+                    if magia._ad_area == True:
+                        print(f"\n{n}|\t{magia.NOME}, LV{magia._livello}, magia che colpisce tutti i nemici, {magia._quanta_sp_o_hp_richiede}SP")
+                    else:
+                        print(f"\n{n}|\t{magia.NOME}, LV{magia._livello}, magia che colpisce solo un nemico, {magia._quanta_sp_o_hp_richiede}SP")
                 else:
-                    print(f"\n{n}|\t{magia.NOME},LV{magia._livello},{magia._ad_area},{magia._quanta_sp_o_hp_richiede}HP")
+                    if magia._ad_area == True:
+                        print(f"\n{n}|\t{magia.NOME}, LV{magia._livello}, magia che colpisce tutti i nemici, {magia._quanta_sp_o_hp_richiede}HP")
+                    else:
+                        print(f"\n{n}|\t{magia.NOME}, LV{magia._livello}, magia che colpisce solo un nemico, {magia._quanta_sp_o_hp_richiede}HP")
 
-            magia_scelta = (int(input("inserire il numero"))) - 1 #TODO TRY EXEPT
-            if magia_scelta < 0 or magia_scelta > len(self._set_in_uso._lista_magie):
+            magia_scelta = (int(input("inserire il numero")) - 1) #TODO TRY EXEPT
+            if magia_scelta >= len(self._set_in_uso._lista_magie) or magia_scelta < 0:
                 scelta_non_valida = True
 
         magia_scelta = self._set_in_uso._lista_magie[magia_scelta]
@@ -315,10 +306,12 @@ class Nemico(Entita):
         
 class Set_magia:
     def __init__(self,
+                NOME:str,
                 lista_magie:list,
                 DEBOLEZZE:list,
                 COSA_ANNULLA:list,
         ):
+        self.NOME = NOME
         self._lista_magie = lista_magie
         self.DEBOLEZZE = DEBOLEZZE
         self.COSA_ANNULLA = COSA_ANNULLA
@@ -414,19 +407,19 @@ def genera_nemici(): #TODO
 
     lista_magie_goblin = [magia3,magia4]
 
-    set_goblin = Set_magia(lista_magie_goblin,[],[])
+    set_goblin = Set_magia("",lista_magie_goblin,[],[])
     lista_set_goblin = [set_goblin]
     goblin = Nemico("Goblin","red",86,30,10,10,20,lista_set_goblin,None,10)
 
     lista_magie_cavaliere = [magia5]
 
-    set_cavaliere = Set_magia(lista_magie_cavaliere,[],[])
+    set_cavaliere = Set_magia("",lista_magie_cavaliere,[],[])
     lista_set_cavaliere = [set_cavaliere]
     cavaliere_nero = Nemico("Cavaliere nero","red",120,4,2,2,10,lista_set_cavaliere,None,15.5)
 
     lista_magie_cavaliere_normale = [magia6]
 
-    set_cavaliere_normale = Set_magia(lista_magie_cavaliere_normale,[],[])
+    set_cavaliere_normale = Set_magia("",lista_magie_cavaliere_normale,[],[])
     lista_set_cavaliere_normale = [set_cavaliere_normale]
     cavaliere_normale = Nemico("Cavaliere","red",80,4,2,2,10,lista_set_cavaliere_normale,None,15.5)
 
@@ -462,7 +455,7 @@ def turno(lista_giocatori): #TODO
                     print(f"\n{nemico.NOME}: {nemico._vita}/{nemico._vita_massima}HP",end="\t")
                 print("\n\n")
                 if fine_partita == False:
-                    scelta = input(f"Turno di {giocatore.NOME};\n1:magia,   2:cambia set,   3:, 4:  \n")
+                    scelta = input(f"Turno di {giocatore.NOME};\n1:magia\t2:cambia set")
                     if scelta == "1":
                         #scegli magia
                         magia_scelta = giocatore.scegli_magia()
@@ -479,11 +472,22 @@ def turno(lista_giocatori): #TODO
                             x = input("")
 
                     elif scelta == "2":
-                        ##TODO
-                        #for set in giocatore:
-                        #    print(f"{set.NOME}")
-                        #giocatore.cambia_set(set_da_verificare)
-                        pass
+                        input_sbagliato = True
+                        while input_sbagliato:
+                            input_sbagliato = False
+                            os.system("cls")
+                            n = 1
+                            for set in giocatore._lista_set:
+                                print(f"{n}|\t{set.NOME}")#TODO aggiungere più dettagli
+                                n = n + 1
+                            set_da_verificare = (int(input("inserire il numero del set")) - 1)
+                            if set_da_verificare < 0 or set_da_verificare > len(giocatore._lista_set):
+                                input_sbagliato = True
+
+                        giocatore.cambia_set(set_da_verificare)
+                        print(f"il giocatore:{giocatore.NOME} ha equipaggiato:{giocatore._set_in_uso.NOME}")
+                        x = input("")
+                        
 
     print("vittoria per:")
     for giocatore in lista_giocatori:

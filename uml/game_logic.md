@@ -33,6 +33,7 @@ class Nemico{
 }
 
 class Set_magia {
+    NOME:str,
     lista_magie :list
     DEBOLEZZE :list
     COSA_ANNULLA :list
