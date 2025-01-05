@@ -65,7 +65,7 @@ def main():
         continuare = False
         turno(lista_giocatori)
         non_valido = True
-        x = input("\n")#così facendo le statistiche si possonon leggere
+        x = input("\n")#così facendo le statistiche si possono leggere
         while non_valido:
             os.system(clear)
             risposta = str(input("VUOI INIZIARE UN ALTRA BATTAGLIA?\n\nyes\nno\n"))
