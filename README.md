@@ -5,77 +5,69 @@ the objective is to make it easier to read and improve some game mecanic,
 and maybe i will add some grafic improvment
 using the "py_cui" library.
 
+### ONLY FOR NOW:
+you don't need to install any library.
+
+The **requirements.txt** file, will only be used for the final version of the game 
+
+# HOW TO RUN THE PROJECT:
+for now you don't have to use a **venv**, you only need to run the **main.py** file,
+
+that is located in the ***code*** directory (it will change file path in future).
 ## Here is the game logic UML
 
 ```mermaid
 classDiagram
-Entita --|> Alleato
-Entita --|> Nemico
-Entita --> Set_magie :possiede
-Set_magie --> Magia :possiede
+Alleato --|> Entita
+Nemico --|> Entita
+Entita "1"--> "1..n" Set_magia :possiede
+Set_magia "1" --> "1..n" Magia :contiene
+
 class Entita {
-    nome: str
-    colore: str
-    vita_massima : int
-    vita :int
-    agilita :int
-    atterrato :bool
-    one_more :bool
-    crit :boll
-    possibilita_crit :int
+    NOME :str
+    COLORE :str
+    vita_massima :int
+    AGILITA :int
+    POSSIBILITA_CRIT :int
     potenza_magie :int
-    difesa :int
-    set_magie :list
-    statistiche_momentanee :tuple 
+    DIFESA :int
+    lista_set :list
+    -cambia_set(set_da_verificare)
 }
 
 class Alleato {
     sp_massimi :int
     sp :int
     esperienza :float
+    -aumenta_statistiche_se_livellato()
 }
 
 class Nemico{
-    drop
+    DROP :list
+    EXP :float
+    -cosa_fa_nemico()
+    -fai_magia(alleato_scelto,magia_scelta)
+    -nemico_Attacca(lista_alleati_vivi)
 }
 
-class Set_magie {
+class Set_magia {
+    NOME:str,
     lista_magie :list
-    debolezze :list
-    annulla :list
+    DEBOLEZZE :list
+    COSA_ANNULLA :list
+    -aggiungi_magia(magia)
+    -rimuovi_magia(magia)
 }
 
 class Magia {
-    nome : str
+    NOME : str
     livello : int
-    tipo : str
+    TIPO : str
     ad_area : bool
-    consuma_sp :bool
-    quanto_richiede :int
+    CONSUMA_SP :bool
+    quanta_sp_o_hp_richiede :int
+    
 }
 ```
-
-## COME ESEGIURE IL PROGRAMMA
-**per prima cosa** si deve verificare se su visual studio si abbia creato una **venv** (virtual enviorment).
-
-### **SOLO SE** non si ha un **venv**
-scrivere su un **terminale** il seguente codice,
-
-***al posto di .venv si può chiamarlo come si vuole, basta che DOPO si ricordi di mettere il nome che gli si ha assegnato***
-
-```
-python3.11 -m venv .venv
-```
-***il comando funziona solo in un terminale con python***
-
-se non funziona verificare come si ha chiamato il file eseguibile di python e inserire quello al posto del ***python3.11***.
-
-## DOPO AVER CREATO LA **venv**
-
-```python
-#windows
-.venv\Scripts\activate
-
-#linux
-source .venv/bin/activate
-```
+# THE MEANING OF THE NAMES IN THE UML;
+#TODO

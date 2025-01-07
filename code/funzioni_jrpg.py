@@ -275,12 +275,25 @@ class Alleato(Entita):
             raise ValueError("ERRORE NELL'ASSEGNARE GLI EXP PER LIVELLARE")
     
 class Nemico(Entita): 
-    def __init__(self, NOME, COLORE, vita_massima, AGILITA, POSSIBILITA_CRIT, potenza_magie, DIFESA, lista_set,DROP,EXP):
+    def __init__(self,
+                NOME,
+                LIVELLO,
+                COLORE,
+                vita_massima,
+                AGILITA,
+                POSSIBILITA_CRIT,
+                potenza_magie,
+                DIFESA,
+                lista_set,
+                DROP,
+                EXP
+        ):
         super().__init__(NOME, COLORE, vita_massima, AGILITA, POSSIBILITA_CRIT, potenza_magie, DIFESA, lista_set)
 
         self.DROP = DROP #lista dei possibili drop di un nemico
         self.EXP = EXP #exp che guadagnerà il giocatore
         self._sp = 9999
+        self.LIVELLO = LIVELLO
     
     @property
     def sp(self):
@@ -310,7 +323,7 @@ class Nemico(Entita):
         if annulla == True:
             danno = 0
         else:
-            livello = self._set_in_uso._livello #di quanto aumentare il danno
+            livello = self.LIVELLO #di quanto aumentare il danno
 
             if debole == True:
                 danno = 30 * livello
@@ -319,11 +332,13 @@ class Nemico(Entita):
         alleato_scelto._vita = alleato_scelto._vita - int(danno)
         return danno
 
-    def nemico_Attacca(self,lista_alleati_vivi):
+    def nemico_attacca(self,lista_alleati_vivi):
         alleato_scelto = choice(lista_alleati_vivi)
-        magia_scelta = cosa_fa_nemico()
-        danno = fai_magia(alleato_scelto,magia_scelta)
-        print(danno)
+
+        magia_scelta = self.cosa_fa_nemico()
+        danno = self.fai_magia(alleato_scelto,magia_scelta)
+
+        return danno
         
 class Set_magia:
     def __init__(self,
@@ -420,32 +435,7 @@ def assegna_drop(alleato,nemico): #TODO
         pass
     pass
 
-def genera_nemici(): #TODO
-    magia3 = Magia("testata",2,"bho",False,True,1) #TODO cambiare il tipo di magia
-    magia4 = Magia("pugno",1,"bho",False,True,1)
-    magia5 = Magia("colpo con spada",3,"bho",True,True,1)
-    magia6 = Magia("carica",3,"bho",False,True,1)
-
-    lista_magie_goblin = [magia3,magia4]
-
-    set_goblin = Set_magia("",lista_magie_goblin,[],[])
-    lista_set_goblin = [set_goblin]
-    goblin = Nemico("Goblin","red",86,30,10,10,20,lista_set_goblin,None,10)
-
-    lista_magie_cavaliere = [magia5]
-
-    set_cavaliere = Set_magia("",lista_magie_cavaliere,[],[])
-    lista_set_cavaliere = [set_cavaliere]
-    cavaliere_nero = Nemico("Cavaliere nero","red",120,4,2,2,10,lista_set_cavaliere,None,15.5)
-
-    lista_magie_cavaliere_normale = [magia6]
-
-    set_cavaliere_normale = Set_magia("",lista_magie_cavaliere_normale,[],[])
-    lista_set_cavaliere_normale = [set_cavaliere_normale]
-    cavaliere_normale = Nemico("Cavaliere","red",80,4,2,2,10,lista_set_cavaliere_normale,None,15.5)
-
-    lista_nemici_tutti = [goblin,cavaliere_nero,cavaliere_normale]
-
+def genera_nemici(lista_nemici_tutti):
     quanti_nemici_generare = randint(1,3)
 
     lista_nemici = []
@@ -454,14 +444,35 @@ def genera_nemici(): #TODO
         lista_nemici.append(nemico_scelto)
     return lista_nemici
 
-def turno(lista_giocatori): #TODO
+def turno(lista_giocatori,lista_nemici_tutti): #TODO
+
     exp_da_dare_a_fine_partita = 0
-    lista_nemici = genera_nemici()
+
+    lista_nemici = genera_nemici(lista_nemici_tutti)
     fine_partita = False
     while fine_partita == False:
-
+        #controllo che la partita sia finita
         if fine_partita == False:
-            for giocatore in lista_giocatori:
+            #controllo se un nemico è morto, se si assegna la exp che rilascia
+
+            for giocatore in lista_giocatori: #determina di che giocatore è il turno
+
+                lista_giocatori_nuova = []
+                lista_giocatori_nuova_morti = []
+
+                for giocatore_ in lista_giocatori:
+                    if giocatore_._vita <= 0:   #il giocatore è morto
+                        lista_giocatori_nuova_morti.append(giocatore_)
+                    else:                       #il giocatore è vivo
+                        lista_giocatori_nuova.append(giocatore_)
+
+                lista_giocatori = lista_giocatori_nuova #aggiornamento della lista
+                lista_giocatori_morti = lista_giocatori_nuova_morti
+
+                if len(lista_nemici) == 0: #nemici sconfitti, fine della partita
+                    fine_partita = True
+                    partita_vinta = True
+
                 os.system(clear)
                 lista_nemici_nuova = []
                 for nemico in lista_nemici:
@@ -473,21 +484,23 @@ def turno(lista_giocatori): #TODO
 
                 lista_nemici = lista_nemici_nuova #così facendo tutti i nemici vengono rimossi in un solo turno
                         
-                if len(lista_nemici) == 0: #nemici sconfitti, fine della partita
+                if len(lista_giocatori) == 0: #giocatori sconfitti, fine della partita
                     fine_partita = True
-
-                print("- - -NEMICI- - -")
-                for nemico in lista_nemici:
-                    print(f"{nemico.NOME}: {nemico._vita}/{nemico._vita_massima}HP")
-                print("- - -",end="\n\n")
-
-                print("- - - GIOCATORI - - -")
-                for giocatore in lista_giocatori:
-                    print(f"{giocatore.NOME}: {giocatore._vita}/{giocatore._vita_massima}HP|{giocatore._sp}/{giocatore._sp_massimi}SP")
-                print("- - -\n")
-
-
+                    partita_vinta = False
+            
                 if fine_partita == False:
+                    #stampa della CUI in combattimento
+                    print("- - -NEMICI- - -")
+                    for nemico in lista_nemici:
+                        print(f"{nemico.NOME}: {nemico._vita}/{nemico._vita_massima}HP")
+                    print("- - -",end="\n\n")
+
+                    print("- - - GIOCATORI - - -")
+                    for giocatore in lista_giocatori:
+                        print(f"{giocatore.NOME}: {giocatore._vita}/{giocatore._vita_massima}HP|{giocatore._sp}/{giocatore._sp_massimi}SP")
+                    print("- - -\n")
+
+
                     scelta = input(f"TURNO DI: {giocatore.NOME}:\n|1|:MAGIA    |2|:CAMBIA SET\n")
                     os.system(clear)
                     if scelta == "1":
@@ -495,25 +508,33 @@ def turno(lista_giocatori): #TODO
                         magia_scelta = giocatore.scegli_magia()
 
                         if magia_scelta._ad_area == False:
+                            
                             nemico = giocatore.scegli_chi_attacare(lista_nemici)
                             danno = giocatore.fai_magia(nemico,magia_scelta)
+
                             print(f"{nemico.NOME}: ha subito - {danno}")
                             x = input("\n")
                         else:
+
                             for nemico in lista_nemici:
                                 danno = giocatore.fai_magia(nemico,magia_scelta)
                                 print(f"{nemico.NOME}: ha subito -{danno}")
+
                             x = input("\n")
 
                     elif scelta == "2":
+
                         input_sbagliato = True
                         while input_sbagliato:
+
                             input_sbagliato = False
                             os.system(clear)
                             n = 1
+
                             for set in giocatore._lista_set:
                                 print(f"{n}|\t{set.NOME}")#TODO aggiungere più dettagli
                                 n = n + 1
+
                             set_da_verificare = (int(input("inserire il numero del set\n")) - 1)
                             os.system(clear)
 
@@ -523,10 +544,35 @@ def turno(lista_giocatori): #TODO
                         giocatore.cambia_set(set_da_verificare)
                         print(f"il giocatore: {giocatore.NOME}\nha equipaggiato: {giocatore._set_in_uso.NOME}")
                         x = input("\n")
-                        
-    os.system(clear)
-    print("VITTORIA PER;")
-    for giocatore in lista_giocatori:
-        print(f"|{giocatore.NOME}")
-        x = input("\n")
-        calcola_exp(giocatore,exp_da_dare_a_fine_partita)
+
+
+            for nemico in lista_nemici: #detrmina di che nemico è il turno
+                os.system(clear)
+                lista_giocatori_nuova = []
+                lista_giocatori_nuova_morti = []
+
+                for giocatore_ in lista_giocatori:
+                    if giocatore_._vita <= 0:   #il giocatore è morto
+                        lista_giocatori_nuova_morti.append(giocatore_)
+                    else:                       #il giocatore è vivo
+                        lista_giocatori_nuova.append(giocatore_)
+
+                lista_giocatori = lista_giocatori_nuova #aggiornamento della lista
+                lista_giocatori_morti = lista_giocatori_nuova_morti #aggiornamento della lista
+
+                if len(lista_giocatori) == 0: #giocatori sconfitti, fine della partita
+                    fine_partita = True
+                    partita_vinta = False
+
+                if fine_partita == False:
+                    danno = nemico.nemico_attacca(lista_giocatori)
+    
+
+    if partita_vinta == True:
+        os.system(clear)
+        print("VITTORIA PER;")
+        for giocatore in lista_giocatori:
+            print(f"|{giocatore.NOME}")
+            x = input("\n")
+            calcola_exp(giocatore,exp_da_dare_a_fine_partita)
+    return partita_vinta

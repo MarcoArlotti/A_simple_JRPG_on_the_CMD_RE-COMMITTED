@@ -1,7 +1,7 @@
 ```mermaid
 classDiagram
-Entita --|> Alleato
-Entita --|> Nemico
+Alleato --|> Entita
+Nemico --|> Entita
 Entita "1"--> "1..n" Set_magia :possiede
 Set_magia "1" --> "1..n" Magia :contiene
 
