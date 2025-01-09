@@ -32,12 +32,7 @@ class Entita:
         self.atterato = False
         self.one_more = False
         self._statistiche_momentanee = (0,0,0)# (ATK,DEF,AGI)
-        self._set_in_uso = self._lista_set[0] #assegna di base il primo set nella lista, preso dalla lista dei set
-    
-
-    def __str__(self):
-        return f"\n{self.NOME},\n{self.COLORE},\n{self._vita_massima},\n{self._vita},\n{self.AGILITA},\n{self.POSSIBILITA_CRIT},\n{self._potenza_magie},\n{self.DIFESA},\n{self._lista_set},\n{self._set_in_uso}"
-    
+        self._set_in_uso = self._lista_set[0] #assegna di base il primo set nella lista, preso dalla lista dei set 
 
     def cambia_set(self,posizione_set):
         self._set_in_uso = self._lista_set[posizione_set]
@@ -295,16 +290,7 @@ class Nemico(Entita):
         self._sp = 9999
         self.LIVELLO = LIVELLO
     
-    @property
-    def sp(self):
-        return self._sp
-    @sp.setter
-    def sp(self,sp_da_assegnare:int):
-        if type(sp_da_assegnare) == int:
-            self._sp = sp_da_assegnare
-        else:
-            raise ValueError("ERRORE NELL'ASSEGNAZIONE DELL'SP")
-
+    
     def cosa_fa_nemico(self):
         magia_scelta = choice(self._set_in_uso._lista_magie)
         return magia_scelta
@@ -339,7 +325,17 @@ class Nemico(Entita):
         danno = self.fai_magia(alleato_scelto,magia_scelta)
 
         return danno
-        
+
+    @property
+    def sp(self):
+        return self._sp
+    @sp.setter
+    def sp(self,sp_da_assegnare:int):
+        if type(sp_da_assegnare) == int:
+            self._sp = sp_da_assegnare
+        else:
+            raise ValueError("ERRORE NELL'ASSEGNAZIONE DELL'SP")
+     
 class Set_magia:
     def __init__(self,
                 NOME:str,
@@ -351,17 +347,6 @@ class Set_magia:
         self._lista_magie = lista_magie
         self.DEBOLEZZE = DEBOLEZZE
         self.COSA_ANNULLA = COSA_ANNULLA
-    
-    #@property #FORSE SERVE
-    #def lista_magie(self):
-    #    return self._lista_magie
-    #@lista_magie.setter
-    #def lista_magie(self,lista_magie_da_assegnare):
-    #    if type(lista_magie_da_assegnare) == list and lista_magie_da_assegnare != []:
-    #        self._lista_magie = lista_magie_da_assegnare
-    #    else:
-    #        raise ValueError("ERRORE NELL'ASSEGNAZIONE DELLA lista_magie")
-    
 
     def aggiungi_magia(self,magia):
         self._lista_magie.append(magia)
@@ -393,6 +378,8 @@ class Magia:
         self._ad_area = ad_area
         self.CONSUMA_SP = CONSUMA_SP
         self._quanta_sp_o_hp_richiede = quanta_sp_o_hp_richiede
+    
+    #TODO al posto che mettere e scegliere la magia dalla classe "alleato", FORSE è meglio eseguirla qui
 
     @property
     def livello(self):
