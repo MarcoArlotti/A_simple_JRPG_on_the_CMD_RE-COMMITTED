@@ -1,21 +1,21 @@
-def salta_turno(): #TODO
+def salta_turno(nemico):
     """
     l'effetto di questa magia
     fa saltare un turno a un o più avversari
     """
-    pass
+    nemico.salta_il_tuo_prossimo_turno = True
 
-def attacco_2_turni(): #TODO
+def attacco_2_turni(self):
     """
-    questa magia fa u danno maggiore
+    questa magia fa un danno maggiore
     ma a discapito di saltare un turno successivamente
     """
-    pass
+    self.salta_il_tuo_prossimo_turno = True
 
 def rage_drive(): #TODO
     """
     questa magia può essere usata una sola volta per battaglia,
-    aumenta l'attacco anche
+    in più aumenta l'attacco
 
     """
     pass

@@ -2,8 +2,9 @@ import os
 from random import choice,randint
 from sys import platform
 
+#questo serve per svuotare il terminale, sia da linux che da windows
 if platform == "linux":
-    clear = "clear"   
+    clear = "clear"
 elif platform == "win32":
     clear = "cls"
 
@@ -29,6 +30,8 @@ class Entita:
         self.DIFESA = DIFESA
         self._lista_set = lista_set#
         
+        self.salta_il_tuo_prossimo_turno = False
+
         self.atterato = False
         self.one_more = False
         self._statistiche_momentanee = (0,0,0)# (ATK,DEF,AGI)
@@ -111,7 +114,7 @@ class Alleato(Entita):
                         potenza_magie,
                         DIFESA,
                         lista_set)
-
+        
         self._sp_massimi = sp_massimi#
         self._sp = sp_massimi#
         self._exp = float(0)#
@@ -290,7 +293,6 @@ class Nemico(Entita):
         self._sp = 9999
         self.LIVELLO = LIVELLO
     
-    
     def cosa_fa_nemico(self):
         magia_scelta = choice(self._set_in_uso._lista_magie)
         return magia_scelta
@@ -413,6 +415,8 @@ class Magia:
         else:
             raise ValueError("ERRORE NELL'ASSEGNARE quanta_sp_o_hp_richiede")
 
+#TODO class Magia_con_effetti_speciali
+
 def calcola_exp(alleato,exp_da_dare_a_fine_partita):
     alleato._exp = alleato._exp + exp_da_dare_a_fine_partita
     alleato.aumenta_statistiche_se_livellato()
@@ -475,7 +479,7 @@ def turno(lista_giocatori,lista_nemici_tutti): #TODO
                     fine_partita = True
                     partita_vinta = False
             
-                if fine_partita == False:
+                if fine_partita == False and giocatore.salta_il_tuo_prossimo_turno == False:
                     #stampa della CUI in combattimento
                     print("- - -NEMICI- - -")
                     for nemico in lista_nemici:
@@ -531,7 +535,12 @@ def turno(lista_giocatori,lista_nemici_tutti): #TODO
                         giocatore.cambia_set(set_da_verificare)
                         print(f"il giocatore: {giocatore.NOME}\nha equipaggiato: {giocatore._set_in_uso.NOME}")
                         x = input("\n")
-
+                
+                if giocatore.salta_il_tuo_prossimo_turno == True:
+                    os.system(clear)
+                    print(f"{giocatore.NOME} ha saltato il suo turno")
+                    giocatore.salta_il_tuo_prossimo_turno = False
+                    x = input("")
 
             for nemico in lista_nemici: #detrmina di che nemico è il turno
                 os.system(clear)
@@ -551,8 +560,14 @@ def turno(lista_giocatori,lista_nemici_tutti): #TODO
                     fine_partita = True
                     partita_vinta = False
 
-                if fine_partita == False:
+                if fine_partita == False and nemico.salta_il_tuo_prossimo_turno == False:
                     danno = nemico.nemico_attacca(lista_giocatori)
+                
+                if nemico.salta_il_tuo_prossimo_turno == True:
+                    os.system(clear)
+                    print(f"{nemico.NOME} ha saltato il suo turno")
+                    nemico.salta_il_tuo_prossimo_turno = False
+                    x = input("")
     
 
     if partita_vinta == True:
