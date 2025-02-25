@@ -1,5 +1,5 @@
 import os
-from funzioni_jrpg import turno
+from funzioni_jrpg import *
 
 
 from nemici.cavaliere_nero import cavaliere_nero

@@ -1,4 +1,4 @@
-from funzioni_jrpg import Alleato,Set_magia,Magia
+from funzioni_jrpg import *
 
 vita_massima = 200
 #creazione delle varie magie di osuba (un personaggio)
@@ -12,7 +12,8 @@ magia5 = Magia("INSTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
 magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
 
 #creazione delle varie liste di magie da mettere nei set
-osuba_lista_magie1 = [magia1,magia2,magia7,magia5,magia6]
+magia_s_1 = Magia_speciale("salta_turno",2,"SPECIALE",False,True,10,1)
+osuba_lista_magie1 = [magia1,magia2,magia7,magia5,magia6,magia_s_1]
 osuba_lista_magie2 = [magia3,magia4]
 osuba_lista_magie3 = [magia5]
 

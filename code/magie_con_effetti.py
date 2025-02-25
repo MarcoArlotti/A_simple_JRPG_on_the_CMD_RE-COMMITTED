@@ -5,12 +5,12 @@ def salta_turno(nemico):
     """
     nemico.salta_il_tuo_prossimo_turno = True
 
-def attacco_2_turni(self):
+def attacco_2_turni(giocatore,nemico):
     """
     questa magia fa un danno maggiore
     ma a discapito di saltare un turno successivamente
     """
-    self.salta_il_tuo_prossimo_turno = True
+    giocatore.salta_il_tuo_prossimo_turno = True
 
 def rage_drive(): #TODO
     """

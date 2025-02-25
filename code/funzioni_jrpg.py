@@ -1,7 +1,7 @@
 import os
 from random import choice,randint
 from sys import platform
-
+from magie_con_effetti import *
 #questo serve per svuotare il terminale, sia da linux che da windows
 if platform == "linux":
     clear = "clear"
@@ -122,30 +122,34 @@ class Alleato(Entita):
         self._exp_per_livellare = float(10)#
     
     def fai_magia(self,nemico,magia_scelta):
-        debole = False
-        annulla = False
-        for debolezza in nemico._set_in_uso.DEBOLEZZE:
-            if magia_scelta.TIPO == debolezza:
-                debole = True
+        if type(magia_scelta) == "<class 'funzioni_jrpg.Magia'>":
+            print(type(magia_scelta))
+            x = input("")
+            debole = False
+            annulla = False
+            for debolezza in nemico._set_in_uso.DEBOLEZZE:
+                if magia_scelta.TIPO == debolezza:
+                    debole = True
 
-        for annulla in nemico._set_in_uso.COSA_ANNULLA:
-            if magia_scelta.TIPO == annulla:
-                annulla = True
+            for annulla in nemico._set_in_uso.COSA_ANNULLA:
+                if magia_scelta.TIPO == annulla:
+                    annulla = True
 
-        if annulla == True:
-            danno = 0
-        else:
-            livello = magia_scelta._livello #di quanto aumentare il danno
-            if debole == True:
-                danno = 30 * livello
+            if annulla == True:
+                danno = 0
             else:
-                danno = 20 * livello
+                livello = magia_scelta._livello #di quanto aumentare il danno
+                if debole == True:
+                    danno = 30 * livello
+                else:
+                    danno = 20 * livello
 
-                annulla = True
-                
-        nemico._vita = nemico._vita - int(danno)
-        return danno
-    
+                    annulla = True
+
+            nemico._vita = nemico._vita - int(danno)
+            return danno
+        else:
+            fai_magia_speciale(magia_scelta,self,nemico)
     def scegli_chi_attacare(self,lista_nemici):
         rifai = True
         while rifai:
@@ -415,7 +419,11 @@ class Magia:
         else:
             raise ValueError("ERRORE NELL'ASSEGNARE quanta_sp_o_hp_richiede")
 
-#TODO class Magia_con_effetti_speciali
+class Magia_speciale(Magia):
+    def __init__(self, NOME, livello, TIPO, ad_area, CONSUMA_SP, quanta_sp_o_hp_richiede,POSIZIONE_ASSOCIATA):
+        super().__init__(NOME, livello, TIPO, ad_area, CONSUMA_SP, quanta_sp_o_hp_richiede)
+        
+        self.POSIZIONE_ASSOCIATA = POSIZIONE_ASSOCIATA
 
 def calcola_exp(alleato,exp_da_dare_a_fine_partita):
     alleato._exp = alleato._exp + exp_da_dare_a_fine_partita
@@ -435,7 +443,8 @@ def genera_nemici(lista_nemici_tutti):
         lista_nemici.append(nemico_scelto)
     return lista_nemici
 
-def turno(lista_giocatori,lista_nemici_tutti): #TODO
+def turno(lista_giocatori,lista_nemici_tutti): #
+
 
     exp_da_dare_a_fine_partita = 0
 
@@ -489,10 +498,10 @@ def turno(lista_giocatori,lista_nemici_tutti): #TODO
                     print("- - - GIOCATORI - - -")
                     for giocatore in lista_giocatori:
                         print(f"{giocatore.NOME}: {giocatore._vita}/{giocatore._vita_massima}HP|{giocatore._sp}/{giocatore._sp_massimi}SP")
+                    
                     print("- - -\n")
-
-
                     scelta = input(f"TURNO DI: {giocatore.NOME}:\n|1|:MAGIA    |2|:CAMBIA SET\n")
+
                     os.system(clear)
                     if scelta == "1":
                         #scegli magia
@@ -578,3 +587,13 @@ def turno(lista_giocatori,lista_nemici_tutti): #TODO
             x = input("\n")
             calcola_exp(giocatore,exp_da_dare_a_fine_partita)
     return partita_vinta
+
+def fai_magia_speciale(magia,giocatore,nemico):
+    case = str(magia.POSIZIONE_ASSOCIATA)
+    match case:
+        case "1":
+            salta_turno(nemico)
+        case "2":
+            attacco_2_turni(giocatore,nemico)
+        case "3":
+            pass #TODO
