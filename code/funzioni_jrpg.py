@@ -34,8 +34,40 @@ class Entita:
 
         self.atterato = False
         self.one_more = False
-        self._statistiche_momentanee = (0,0,0)# (ATK,DEF,AGI)
+        self._statistiche_momentanee = (0,0,0) #(ATK,DEF,AGI)
+        self.durata_stat_momentanee = (0,0,0) #quanti turni ancora dura una determinata stat
         self._set_in_uso = self._lista_set[0] #assegna di base il primo set nella lista, preso dalla lista dei set 
+
+    #"statistiche_momentanee" --> (0,0,0) -corrisponde a -> "(ATK,DEF,AGI)"
+    def controllo_che_le_statistiche_non_superino_1(self,stat_dopo):
+        if stat_dopo[0] > 1:
+            stat_dopo = (1,self._statistiche_momentanee[1],self._statistiche_momentanee[2])
+        
+        elif stat_dopo[1] > 1:
+            stat_dopo = (self._statistiche_momentanee[0],1,self._statistiche_momentanee[2])
+        
+        elif stat_dopo[2] > 1:
+            stat_dopo = (self._statistiche_momentanee[0],self._statistiche_momentanee[1],1)
+        return stat_dopo
+
+    def aumenta_ATK(self):
+        stat_dopo = (self._statistiche_momentanee[0] + 1,self._statistiche_momentanee[1],self._statistiche_momentanee[2])
+        stat_dopo = self.controllo_che_le_statistiche_non_superino_1(stat_dopo)
+        self._statistiche_momentanee = stat_dopo
+        self.durata_stat_momentanee = (3,self.durata_stat_momentanee[1],self.durata_stat_momentanee[2])
+
+    def aumenta_DEF(self):
+        stat_dopo = (self._statistiche_momentanee[0],self._statistiche_momentanee[1] + 1,self._statistiche_momentanee[2])
+        stat_dopo = self.controllo_che_le_statistiche_non_superino_1(stat_dopo)
+        self._statistiche_momentanee = stat_dopo
+        self.durata_stat_momentanee = (self.durata_stat_momentanee[0],3,self.durata_stat_momentanee[2])
+
+    def aumenta_AGI(self):
+        stat_dopo = (self._statistiche_momentanee[0],self._statistiche_momentanee[1],self._statistiche_momentanee[2] + 1)
+        stat_dopo = self.controllo_che_le_statistiche_non_superino_1(stat_dopo)
+        self._statistiche_momentanee = stat_dopo
+        self.durata_stat_momentanee = (self.durata_stat_momentanee[0],self.durata_stat_momentanee[1],3)
+
 
     def cambia_set(self,posizione_set):
         self._set_in_uso = self._lista_set[posizione_set]
@@ -125,31 +157,13 @@ class Alleato(Entita):
         if type(magia_scelta) == "<class 'funzioni_jrpg.Magia'>":
             print(type(magia_scelta))
             x = input("")
-            debole = False
-            annulla = False
-            for debolezza in nemico._set_in_uso.DEBOLEZZE:
-                if magia_scelta.TIPO == debolezza:
-                    debole = True
-
-            for annulla in nemico._set_in_uso.COSA_ANNULLA:
-                if magia_scelta.TIPO == annulla:
-                    annulla = True
-
-            if annulla == True:
-                danno = 0
-            else:
-                livello = magia_scelta._livello #di quanto aumentare il danno
-                if debole == True:
-                    danno = 30 * livello
-                else:
-                    danno = 20 * livello
-
-                    annulla = True
-
-            nemico._vita = nemico._vita - int(danno)
-            return danno
+            danno = calcola_danno_fatto(magia_scelta,nemico)
         else:
-            fai_magia_speciale(magia_scelta,self,nemico)
+            danno = fai_magia_speciale(magia_scelta,self,nemico)
+
+        nemico._vita = nemico._vita - int(danno)
+        return danno
+
     def scegli_chi_attacare(self,lista_nemici):
         rifai = True
         while rifai:
@@ -302,26 +316,7 @@ class Nemico(Entita):
         return magia_scelta
 
     def fai_magia(self,alleato_scelto,magia_scelta):
-        debole = False
-        annulla = False
-        for debolezza in alleato_scelto._set_in_uso.DEBOLEZZE:
-            if magia_scelta.TIPO == debolezza:
-                debole = True
-
-        for annulla in alleato_scelto._set_in_uso.COSA_ANNULLA:
-            if magia_scelta.TIPO == annulla:
-                annulla = True
-
-        if annulla == True:
-            danno = 0
-        else:
-            livello = self.LIVELLO #di quanto aumentare il danno
-
-            if debole == True:
-                danno = 30 * livello
-            else:
-                danno = 20 * livello
-        alleato_scelto._vita = alleato_scelto._vita - int(danno)
+        danno = calcola_danno_fatto(magia_scelta,alleato_scelto) #alleato in questo caso è al posto di "nemico"
         return danno
 
     def nemico_attacca(self,lista_alleati_vivi):
@@ -594,6 +589,30 @@ def fai_magia_speciale(magia,giocatore,nemico):
         case "1":
             salta_turno(nemico)
         case "2":
-            attacco_2_turni(giocatore,nemico)
+            danno = attacco_2_turni(magia,giocatore,nemico)
+            nemico._vita = nemico._vita - int(danno)
         case "3":
             pass #TODO
+    return danno
+
+def calcola_danno_fatto(magia_scelta,nemico):
+    debole = False
+    annulla = False
+    for debolezza in nemico._set_in_uso.DEBOLEZZE:
+        if magia_scelta.TIPO == debolezza:
+            debole = True
+
+    for annulla in nemico._set_in_uso.COSA_ANNULLA:
+        if magia_scelta.TIPO == annulla:
+            annulla = True
+
+    if annulla == True:
+        danno = 0
+    else:
+        livello = magia_scelta._livello #il livello influenza quanto danno si fà
+        if debole == True:
+            danno = 30 * livello
+        else:
+            danno = 20 * livello
+            annulla = True
+    return danno

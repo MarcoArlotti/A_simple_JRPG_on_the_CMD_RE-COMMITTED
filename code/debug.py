@@ -1,5 +1,6 @@
 #import py_cui
-from funzioni_jrpg import Alleato,Nemico,Set_magia,Magia,Entita
+#from funzioni_jrpg import *
+#from magie_con_effetti import *
 import math
 from sys import platform
 
@@ -8,7 +9,9 @@ if platform == "linux":
     clear = "clear"   
 elif platform == "win32":
     clear = "cls"
-
+stat = (0,0,0)
+stat = (stat[0] + 1,0,0)
+print(stat)
 """
 
 test_magia1 = Magia("bomba",2,"esplosivo",True,True,10)
