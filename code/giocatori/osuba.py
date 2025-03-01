@@ -13,7 +13,9 @@ magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
 
 #creazione delle varie liste di magie da mettere nei set
 magia_s_1 = Magia_speciale("salta_turno",2,"SPECIALE",False,True,10,1)
-osuba_lista_magie1 = [magia1,magia2,magia7,magia5,magia6,magia_s_1]
+magia_s_2 = Magia_speciale("attacco_2_turni",2,"SPECIALE",False,True,10,2)
+
+osuba_lista_magie1 = [magia1,magia2,magia7,magia5,magia6,magia_s_1,magia_s_2]
 osuba_lista_magie2 = [magia3,magia4]
 osuba_lista_magie3 = [magia5]
 

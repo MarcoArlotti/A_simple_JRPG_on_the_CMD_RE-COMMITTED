@@ -154,14 +154,13 @@ class Alleato(Entita):
         self._exp_per_livellare = float(10)#
     
     def fai_magia(self,nemico,magia_scelta):
-        if type(magia_scelta) == "<class 'funzioni_jrpg.Magia'>":
-            print(type(magia_scelta))
-            x = input("")
+        if type(magia_scelta) == Magia:
             danno = calcola_danno_fatto(magia_scelta,nemico)
         else:
             danno = fai_magia_speciale(magia_scelta,self,nemico)
 
-        nemico._vita = nemico._vita - int(danno)
+        if not danno == None:
+            nemico._vita = nemico._vita - int(danno)
         return danno
 
     def scegli_chi_attacare(self,lista_nemici):
@@ -439,8 +438,6 @@ def genera_nemici(lista_nemici_tutti):
     return lista_nemici
 
 def turno(lista_giocatori,lista_nemici_tutti): #
-
-
     exp_da_dare_a_fine_partita = 0
 
     lista_nemici = genera_nemici(lista_nemici_tutti)
@@ -506,16 +503,21 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                             
                             nemico = giocatore.scegli_chi_attacare(lista_nemici)
                             danno = giocatore.fai_magia(nemico,magia_scelta)
-
-                            print(f"{nemico.NOME}: ha subito - {danno}")
-                            x = input("\n")
+                            if not danno == None:
+                                print(f"{nemico.NOME}: ha subito - {danno}")
+                                x = input("\n")
                         else:
+                            almeno_un_nemico_danneggiato = False
 
                             for nemico in lista_nemici:
                                 danno = giocatore.fai_magia(nemico,magia_scelta)
-                                print(f"{nemico.NOME}: ha subito -{danno}")
 
-                            x = input("\n")
+                                if not danno == None:
+                                    almeno_un_nemico_danneggiato = True
+                                    print(f"{nemico.NOME}: ha subito -{danno}")
+
+                                if almeno_un_nemico_danneggiato == True:
+                                    x = input("\n")
 
                     elif scelta == "2":
 
@@ -586,13 +588,24 @@ def turno(lista_giocatori,lista_nemici_tutti): #
 def fai_magia_speciale(magia,giocatore,nemico):
     case = str(magia.POSIZIONE_ASSOCIATA)
     match case:
-        case "1":
-            salta_turno(nemico)
-        case "2":
-            danno = attacco_2_turni(magia,giocatore,nemico)
-            nemico._vita = nemico._vita - int(danno)
-        case "3":
-            pass #TODO
+        case "1": #"salta_turno"
+            # salta_turno(nemico) TODO non ha senso come utilità
+            danno = None
+
+        case "2": #"danno_2_turni"
+            salta_turno(giocatore)
+            danno = calcola_danno_fatto(magia,nemico)
+            danno = int(danno * 2.2)
+
+        case "3": #"rage_drive"
+            danno = calcola_danno_fatto(magia,nemico)
+            danno = int(danno * 2.3)
+            giocatore.aumenta_ATK()
+
+
+        case "4": #"rage_art"
+            pass #TODO fare in modo che la maagia possa fallire se la vita è sopra il 15%
+        
     return danno
 
 def calcola_danno_fatto(magia_scelta,nemico):
