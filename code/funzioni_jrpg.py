@@ -451,7 +451,7 @@ def controlla_vita_nemici(lista_nemici):
         else:
             lista_nemici_nuova.append(nemico)
 
-    if len(lista_nemici) == 0: #nemici sconfitti, fine della partita
+    if len(lista_nemici_nuova) == 0: #nemici sconfitti, fine della partita
         fine_partita = True
         partita_vinta = True
     
@@ -562,6 +562,9 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                 x = input("")
 
         for nemico in lista_nemici: #inizia il turno dei nemici
+
+            lista_nemici,fine_partita,partita_vinta = controlla_vita_nemici(lista_nemici)
+
             if fine_partita == False and nemico.salta_il_tuo_prossimo_turno == False:
                 danno,magia_scelta = nemico.nemico_attacca(lista_giocatori_vivi)
                 print(f"il nemico {nemico.NOME} ha attaccato usando: |{magia_scelta.NOME}| -{danno}HP | LV:{magia_scelta._livello}")
