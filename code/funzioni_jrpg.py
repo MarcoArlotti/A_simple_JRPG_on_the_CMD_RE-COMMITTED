@@ -326,7 +326,7 @@ class Nemico(Entita):
 
         if not danno == None:
             alleato_scelto._vita = alleato_scelto._vita - int(danno)
-        return danno,magia_scelta
+        return danno,magia_scelta,alleato_scelto
 
     @property
     def sp(self):
@@ -486,11 +486,12 @@ def turno(lista_giocatori,lista_nemici_tutti): #
     while fine_partita == False:
         lista_giocatori_vivi,lista_giocatori_morti,partita_vinta,fine_partita = controlla_vita_giocatori(lista_giocatori)
 
-        for giocatore in lista_giocatori_vivi: #determina di che giocatore è il turno
+        for giocatore_ in lista_giocatori_vivi: #determina di che giocatore è il turno
             lista_nemici,fine_partita,partita_vinta = controlla_vita_nemici(lista_nemici)
 
-            if fine_partita == False and giocatore.salta_il_tuo_prossimo_turno == False:
+            if fine_partita == False and giocatore_.salta_il_tuo_prossimo_turno == False:
                     #stampa della CUI in combattimento
+                    print()
                     print("- - -NEMICI- - -")
                     for nemico in lista_nemici:
                         print(f"{nemico.NOME}: {nemico._vita}/{nemico._vita_massima}HP")
@@ -502,10 +503,10 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                     print("- - -\n")
                     if len(lista_giocatori_morti) > 0:
                         print("|-|-|-GIOCATORI MORTI-|-|-|")
-                        for giocatore in lista_giocatori_morti:
-                            print(f"{giocatore.NOME}:{giocatore._sp}/{giocatore._sp_massimi}SP")
+                        for giocatore__ in lista_giocatori_morti:
+                            print(f"{giocatore__.NOME}:{giocatore__._sp}/{giocatore__._sp_massimi}SP")
                         print("-"*30)
-                    scelta = input(f"///////TURNO DI: {giocatore.NOME}:///////\n|1|:MAGIA    |2|:CAMBIA SET\n")
+                    scelta = input(f"///////TURNO DI: {giocatore_.NOME}:///////\n|1|:MAGIA    |2|:CAMBIA SET\n")
 
                     os.system(clear)
                     if scelta == "1":
@@ -555,19 +556,21 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                         print(f"il giocatore: {giocatore.NOME}\nha equipaggiato: {giocatore._set_in_uso.NOME}")
                         x = input("\n")
             
-            if giocatore.salta_il_tuo_prossimo_turno == True:
+            if giocatore_.salta_il_tuo_prossimo_turno == True:
                 os.system(clear)
-                print(f"{giocatore.NOME} ha saltato il suo turno")
-                giocatore.salta_il_tuo_prossimo_turno = False
+                print(f"{giocatore_.NOME} ha saltato il suo turno")
+                giocatore_.salta_il_tuo_prossimo_turno = False
                 x = input("")
 
+        print("turno ai nemici")
+        x = input("")
         for nemico in lista_nemici: #inizia il turno dei nemici
 
             lista_nemici,fine_partita,partita_vinta = controlla_vita_nemici(lista_nemici)
 
             if fine_partita == False and nemico.salta_il_tuo_prossimo_turno == False:
-                danno,magia_scelta = nemico.nemico_attacca(lista_giocatori_vivi)
-                print(f"il nemico {nemico.NOME} ha attaccato usando: |{magia_scelta.NOME}| -{danno}HP | LV:{magia_scelta._livello}")
+                danno,magia_scelta,alleato_scelto = nemico.nemico_attacca(lista_giocatori_vivi)
+                print(f"il nemico {nemico.NOME} ha attaccato:{alleato_scelto.NOME}, usando: |{magia_scelta.NOME}| -{danno}HP | LV:{magia_scelta._livello}")
                 x = input("")
 
             if nemico.salta_il_tuo_prossimo_turno == True:

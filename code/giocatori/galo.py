@@ -2,14 +2,10 @@ from funzioni_jrpg import *
 
 vita_massima = 200
 #creazione delle varie magie di galo (un personaggio)
-magia6 = Magia("SIGILLO",999,"bho",True,False,vita_massima - 1) #TODO DA NON LASCIARE
-magia1 = Magia("BOMBA",1,"fuoco",True,True,12)
-magia2 = Magia("FRECCIA INFUOCATA",2,"fuoco",False,True,6)
-magia3 = Magia("TESTATA",2,"bho",False,False,12) #TODO cambiare il tipo di magia
-magia4 = Magia("PUGNO",1,"bho",False,True,6)
-magia5 = Magia("INSTAKILL",19,"bho",False,True,1) #TODO DA NON LASCIARE
-
-magia7 = Magia("PERFORAZIONE",3,"osserva",False,True,20)
+magia7 = Magia("ACCOLTELLATA",4,"bho",ad_area=False,CONSUMA_SP=True,quanta_sp_o_hp_richiede=3)
+magia7 = Magia("ACCOLTELLATA",4,"bho",ad_area=False,CONSUMA_SP=True,quanta_sp_o_hp_richiede=3)
+magia7 = Magia("ACCOLTELLATA",4,"bho",ad_area=False,CONSUMA_SP=True,quanta_sp_o_hp_richiede=3)
+magia7 = Magia("ACCOLTELLATA",4,"bho",ad_area=False,CONSUMA_SP=True,quanta_sp_o_hp_richiede=3)
 
 #creazione delle varie liste di magie da mettere nei set
 magia_s_1 = Magia_speciale("salta_turno",2,"SPECIALE",False,True,10,1)
