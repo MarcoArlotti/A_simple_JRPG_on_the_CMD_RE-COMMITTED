@@ -1,4 +1,4 @@
-from funzioni_jrpg import *
+from funzioni_jrpg import Magia,Magia_speciale,Set_magia,Alleato
 
 vita_massima = 200
 #creazione delle varie magie di osuba (un personaggio)
@@ -52,5 +52,5 @@ lista_set_osuba = [
     osuba_set3
 ]
 
-#assegnazione dek set creati a osuba
+#assegnazione dei set creati a osuba
 osuba._lista_set = lista_set_osuba

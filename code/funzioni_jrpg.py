@@ -217,7 +217,7 @@ class Alleato(Entita):
                 print(f"STATISTICA AUMENTATA: +{vita_max_guadagnata}|max hp")
                 print(f"STATISTICA AUMENTATA: +{sp_massimi_guadagnati}|max sp")
                 print(f"STATISTICA AUMENTATA: +{potenza_magie_guadagnata}|potenza delle magie")
-                x = input("\n")
+                ferma_terminale()
 
     
     def scegli_magia(self):
@@ -511,27 +511,27 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                     os.system(clear)
                     if scelta == "1":
                         #scegli magia
-                        magia_scelta = giocatore.scegli_magia()
+                        magia_scelta = giocatore_.scegli_magia()
 
                         if magia_scelta._ad_area == False:
                             
-                            nemico = giocatore.scegli_chi_attacare(lista_nemici)
-                            danno = giocatore.fai_magia(nemico,magia_scelta)
+                            nemico = giocatore_.scegli_chi_attacare(lista_nemici)
+                            danno = giocatore_.fai_magia(nemico,magia_scelta)
                             if not danno == None:
                                 print(f"{nemico.NOME}: ha subito - {danno}")
-                                x = input("\n")
+                                ferma_terminale()
                         else:
                             almeno_un_nemico_danneggiato = False
 
                             for nemico in lista_nemici:
-                                danno = giocatore.fai_magia(nemico,magia_scelta)
+                                danno = giocatore_.fai_magia(nemico,magia_scelta)
 
                                 if not danno == None:
                                     almeno_un_nemico_danneggiato = True
                                     print(f"{nemico.NOME}: ha subito -{danno}")
 
                                 if almeno_un_nemico_danneggiato == True:
-                                    x = input("\n")
+                                    ferma_terminale()
 
                     elif scelta == "2":
 
@@ -542,19 +542,19 @@ def turno(lista_giocatori,lista_nemici_tutti): #
                             os.system(clear)
                             n = 1
 
-                            for set in giocatore._lista_set:
+                            for set in giocatore_._lista_set:
                                 print(f"{n}|\t{set.NOME}")#TODO aggiungere più dettagli
                                 n = n + 1
 
                             set_da_verificare = (int(input("inserire il numero del set\n")) - 1)
                             os.system(clear)
 
-                            if set_da_verificare < 0 or set_da_verificare >= len(giocatore._lista_set):
+                            if set_da_verificare < 0 or set_da_verificare >= len(giocatore_._lista_set):
                                 input_sbagliato = True
 
-                        giocatore.cambia_set(set_da_verificare)
-                        print(f"il giocatore: {giocatore.NOME}\nha equipaggiato: {giocatore._set_in_uso.NOME}")
-                        x = input("\n")
+                        giocatore_.cambia_set(set_da_verificare)
+                        print(f"il giocatore: {giocatore_.NOME}\nha equipaggiato: {giocatore_._set_in_uso.NOME}")
+                        ferma_terminale()
             
             if giocatore_.salta_il_tuo_prossimo_turno == True:
                 os.system(clear)
@@ -564,11 +564,12 @@ def turno(lista_giocatori,lista_nemici_tutti): #
 
         print("turno ai nemici")
         x = input("")
+        lista_nemici,fine_partita,partita_vinta = controlla_vita_nemici(lista_nemici)
         for nemico in lista_nemici: #inizia il turno dei nemici
 
             lista_nemici,fine_partita,partita_vinta = controlla_vita_nemici(lista_nemici)
 
-            if fine_partita == False and nemico.salta_il_tuo_prossimo_turno == False:
+            if fine_partita == False and nemico.salta_il_tuo_prossimo_turno == False and nemico._vita > 0:
                 danno,magia_scelta,alleato_scelto = nemico.nemico_attacca(lista_giocatori_vivi)
                 print(f"il nemico {nemico.NOME} ha attaccato:{alleato_scelto.NOME}, usando: |{magia_scelta.NOME}| -{danno}HP | LV:{magia_scelta._livello}")
                 x = input("")
@@ -584,7 +585,7 @@ def turno(lista_giocatori,lista_nemici_tutti): #
         print("VITTORIA PER;")
         for giocatore in lista_giocatori_vivi:
             print(f"|{giocatore.NOME}")
-            x = input("\n")
+            ferma_terminale()
             calcola_exp(giocatore,exp_da_dare_a_fine_partita)
     return partita_vinta
 
@@ -605,13 +606,16 @@ def fai_magia_speciale(magia,giocatore,nemico):
             danno = int(danno * 2.3)
             giocatore.aumenta_ATK()
 
-
         case "4": #"rage_art"
             pass #TODO fare in modo che la maagia possa fallire se la vita è sopra il 15%
+
+        case "5": #"ACQUA DELLA BORRACCIA"
+            pass #TODO cura completa del giocatore (GALO)
         
     return danno
 
 def calcola_danno_fatto(magia_scelta,nemico):
+
     debole = False
     annulla = False
     for debolezza in nemico._set_in_uso.DEBOLEZZE:
@@ -632,3 +636,6 @@ def calcola_danno_fatto(magia_scelta,nemico):
             danno = 20 * livello
             annulla = True
     return danno
+
+def ferma_terminale():
+    x = input("\n")
