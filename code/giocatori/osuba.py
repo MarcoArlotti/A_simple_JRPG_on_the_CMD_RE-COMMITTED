@@ -29,7 +29,7 @@ lista_set_osuba = [
 ]
 #per colpa della magia "SIGILLO" osuba si può creare solo verso la fine
 osuba = Alleato(
-    NOME = "OSUBA",
+    nome = "OSUBA",
     COLORE = "GIALLO", #TODO
     vita_massima = 200,
     AGILITA = 20,

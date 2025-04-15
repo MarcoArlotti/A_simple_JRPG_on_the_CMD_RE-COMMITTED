@@ -153,14 +153,18 @@ class Alleato(Entita):
         self.livello = int(1)
         self._exp_per_livellare = float(10)#
     
-    def fai_magia(self,nemico,magia_scelta):
+    def fai_magia(self,n_scelto,lista_nemici,magia_scelta):
+        
+        nemico = lista_nemici[n_scelto]
+
         if type(magia_scelta) == Magia:
             danno = calcola_danno_fatto(magia_scelta,nemico)
         else:
             danno = fai_magia_speciale(magia_scelta,self,nemico)
 
         if not danno == None:
-            nemico._vita = nemico._vita - int(danno)
+            lista_nemici[n_scelto]._vita = lista_nemici[n_scelto]._vita - int(danno)
+            
         return danno
 
     def scegli_chi_attacare(self,lista_nemici):
@@ -174,11 +178,12 @@ class Alleato(Entita):
                 print(f"{i}|\t{nemico.NOME}: {nemico._vita_massima}/{nemico._vita}HP")
                 i += 1
             n_scelto = int(input("scegliere il numero:\n"))
+            n_scelto = n_scelto - 1
+
             if n_scelto > len(lista_nemici) or n_scelto <= 0:
                 rifai = True
 
-        nemico = lista_nemici[n_scelto - 1]
-        return nemico
+        return n_scelto
     
     def aumenta_statistiche_se_livellato(self):
         rifai_while = True #in caso si ha abbastanza exp per livellare più di una volta di fila
@@ -218,8 +223,7 @@ class Alleato(Entita):
                 print(f"STATISTICA AUMENTATA: +{sp_massimi_guadagnati}|max sp")
                 print(f"STATISTICA AUMENTATA: +{potenza_magie_guadagnata}|potenza delle magie")
                 ferma_terminale()
-
-    
+   
     def scegli_magia(self):
         scelta_non_valida = True
 
@@ -432,11 +436,33 @@ def assegna_drop(alleato,nemico): #TODO
 
 def genera_nemici(lista_nemici_tutti):
     quanti_nemici_generare = randint(1,3)
-
+    quanti_nemici_generare = 3
     lista_nemici = []
+    n = [0,1,2]
+    i_ = 2
     for i in range(quanti_nemici_generare):
-        nemico_scelto = choice(lista_nemici_tutti)
-        lista_nemici.append(nemico_scelto)
+        nemico_scelto = randint(0,(len(lista_nemici_tutti)-1))
+        nemico_scelto = 1
+        # print(nemico_scelto)
+        # ferma_terminale()
+
+        nemico_gia_uscito = True
+        for n_ in n:
+            if n_ == nemico_scelto:
+                nemico_gia_uscito = False
+
+        if nemico_gia_uscito == True:
+            nemico = lista_nemici_tutti[nemico_scelto]
+            nemico.NOME = (nemico.NOME + f" {i_}")
+            lista_nemici.append(nemico)
+            i_ = i_ + 1
+        else:
+            nemico = lista_nemici_tutti[nemico_scelto]
+            lista_nemici.append(nemico)
+        if nemico_gia_uscito == False:
+            n.remove(nemico_scelto)
+        
+              
     return lista_nemici
 
 def controlla_vita_nemici(lista_nemici):
@@ -515,16 +541,17 @@ def turno(lista_giocatori,lista_nemici_tutti): #
 
                         if magia_scelta._ad_area == False:
                             
-                            nemico = giocatore_.scegli_chi_attacare(lista_nemici)
-                            danno = giocatore_.fai_magia(nemico,magia_scelta)
+                            n_scelto = giocatore_.scegli_chi_attacare(lista_nemici)
+                            danno = giocatore_.fai_magia(n_scelto,lista_nemici,magia_scelta)
                             if not danno == None:
                                 print(f"{nemico.NOME}: ha subito - {danno}")
                                 ferma_terminale()
                         else:
                             almeno_un_nemico_danneggiato = False
-
+                            n_scelto = 0
                             for nemico in lista_nemici:
-                                danno = giocatore_.fai_magia(nemico,magia_scelta)
+                                
+                                danno = giocatore_.fai_magia(n_scelto,lista_nemici,magia_scelta)
 
                                 if not danno == None:
                                     almeno_un_nemico_danneggiato = True
@@ -532,6 +559,7 @@ def turno(lista_giocatori,lista_nemici_tutti): #
 
                                 if almeno_un_nemico_danneggiato == True:
                                     ferma_terminale()
+                                n_scelto = n_scelto + 1
 
                     elif scelta == "2":
 
@@ -615,7 +643,6 @@ def fai_magia_speciale(magia,giocatore,nemico):
     return danno
 
 def calcola_danno_fatto(magia_scelta,nemico):
-
     debole = False
     annulla = False
     for debolezza in nemico._set_in_uso.DEBOLEZZE:
