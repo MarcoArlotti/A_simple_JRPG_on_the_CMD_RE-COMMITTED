@@ -1,4 +1,3 @@
-from funzioni_jrpg import Nemico,Set_magia,Magia
 
 magia6 = Magia("carica",3,"bho",False,True,1)
 lista_magie_cavaliere_normale = [magia6]
